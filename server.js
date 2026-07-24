@@ -9,6 +9,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let liveOtpDatabase = [];
 
+// Railway health check ke liye root route
+app.get('/', (req, res) => {
+    res.send('Server is running successfully!');
+});
+
+// Manager authentication & data options route
+app.post('/api/manager/login', (req, res) => {
+    const { username, password } = req.body;
+    if (username === 'admin' && password === 'admin123') {
+        return res.json({ success: true, message: "Login successful", role: "Manager" });
+    }
+    res.status(401).json({ success: false, message: "Invalid credentials." });
+});
+
 app.post('/api/manager/upload-numbers', (req, res) => {
     const { entries } = req.body;
     if (entries && Array.isArray(entries)) {
