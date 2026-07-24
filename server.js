@@ -11,7 +11,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Main Dashboard Interface
 app.get('/', (req, res) => {
   res.send(`
     <!DOCTYPE html>
@@ -103,7 +102,6 @@ app.get('/', (req, res) => {
   `);
 });
 
-// Dashboard Backend Proxy Route
 app.get('/api/dashboard-stats', async (req, res) => {
   try {
     const response = await fetch(`${API_BASE_URL}/status`, {
