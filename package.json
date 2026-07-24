@@ -1,7 +1,6 @@
 {
   "name": "grand-panel-output",
   "version": "1.0.0",
-  "description": "Output dashboard and API proxy for Grand Panel",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
