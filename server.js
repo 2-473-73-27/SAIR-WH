@@ -9,12 +9,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let liveOtpDatabase = [];
 
-// Railway health check ke liye root route
+// Railway health check route
 app.get('/', (req, res) => {
     res.send('Server is running successfully!');
 });
 
-// Manager authentication & data options route
+// Manager login route
 app.post('/api/manager/login', (req, res) => {
     const { username, password } = req.body;
     if (username === 'admin' && password === 'admin123') {
