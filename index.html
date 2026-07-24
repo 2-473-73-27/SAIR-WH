@@ -1,0 +1,4156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.0" />
+    <title>Lamex SMS – Manager Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ═══════════ RESET & BASE ═══════════ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            color: #0f172a;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 8px;
+        }
+
+        /* ═══════════ LOGIN — Lamex Style ═══════════ */
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .login-card {
+            background: #d1d5db;
+            width: 100%;
+            max-width: 400px;
+            max-height: 820px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 32px 28px 36px;
+            box-sizing: border-box;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        .login-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .login-logo .logo-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #00c6ff, #0072ff, #7f00ff);
+            border-radius: 18px;
+            margin: 0 auto 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 34px;
+            font-weight: 800;
+            box-shadow: 0 8px 24px rgba(0, 114, 255, 0.3);
+        }
+        .login-logo .brand-name {
+            font-size: 30px;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        .login-logo .brand-sub {
+            font-size: 14px;
+            color: #4b5563;
+            letter-spacing: 3px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: -2px;
+        }
+        .login-welcome {
+            text-align: center;
+            margin-bottom: 28px;
+            width: 100%;
+        }
+        .login-welcome h2 {
+            margin: 0 0 6px 0;
+            font-size: 22px;
+            color: #111827;
+            font-weight: 700;
+        }
+        .login-welcome p {
+            margin: 0;
+            font-size: 14px;
+            color: #4b5563;
+        }
+        .login-form {
+            width: 100%;
+        }
+        .input-group {
+            width: 100%;
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px 14px 46px;
+            border: none;
+            border-radius: 30px;
+            background: #f3f4f6;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            color: #1f2937;
+            transition: 0.2s;
+        }
+        .input-group input:focus {
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        .input-group input::placeholder {
+            color: #9ca3af;
+        }
+        .input-group .icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-size: 16px;
+            pointer-events: none;
+        }
+        .captcha-row {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+            font-size: 14px;
+            color: #1f2937;
+            font-weight: 500;
+            flex-wrap: wrap;
+        }
+        .captcha-row .captcha-label {
+            flex: 1;
+            min-width: 120px;
+            font-weight: 500;
+            color: #1f2937;
+            font-size: 14px;
+        }
+        .captcha-row input {
+            width: 90px;
+            padding: 10px 12px;
+            border: 1.5px solid #9ca3af;
+            border-radius: 8px;
+            background: #ffffff;
+            font-size: 14px;
+            text-align: center;
+            outline: none;
+            transition: 0.2s;
+            color: #1f2937;
+        }
+        .captcha-row input:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+        }
+        .captcha-row .refresh-captcha {
+            background: #e5e7eb;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #4b5563;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .captcha-row .refresh-captcha:hover {
+            background: #d1d5db;
+            transform: rotate(30deg);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 30px;
+            background: #22c55e;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 16px rgba(34, 197, 94, 0.25);
+            letter-spacing: 0.5px;
+        }
+        .login-btn:hover {
+            background: #16a34a;
+            box-shadow: 0 6px 24px rgba(34, 197, 94, 0.35);
+        }
+        .login-btn:active {
+            transform: scale(0.97);
+        }
+        .error-msg {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 10px 16px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            font-size: 13px;
+            font-weight: 500;
+            display: none;
+            border: 1px solid #f87171;
+            width: 100%;
+        }
+        .login-footer {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 11px;
+            color: #6b7280;
+            border-top: 1px solid #cbd5e1;
+            padding-top: 14px;
+            width: 100%;
+        }
+
+        /* ═══════════ DASHBOARD ═══════════ */
+        .dashboard {
+            display: none;
+            width: 100%;
+        }
+        .dashboard.active {
+            display: block;
+        }
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
+        }
+
+        /* ═══════════ SIDEBAR ═══════════ */
+        .left-sidebar {
+            width: 280px;
+            background: #ffffff;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 2px solid #e2e8f0;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            z-index: 100;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
+        }
+        .left-sidebar.manager-theme {
+            background: #ffffff;
+            border-right: 2px solid #dc2626;
+            box-shadow: 4px 0 20px rgba(220, 38, 38, 0.04);
+        }
+        .left-sidebar.manager-theme .header-section {
+            background: #ffffff;
+            border-bottom: 2px solid #dc2626;
+        }
+        .left-sidebar.manager-theme .logo-side {
+            color: #dc2626;
+        }
+        .left-sidebar.manager-theme .logo-side span {
+            color: #0f172a;
+        }
+        .left-sidebar.manager-theme .nav-item:hover,
+        .left-sidebar.manager-theme .nav-item.active {
+            background: #f1f5f9;
+            border-color: #dc2626;
+            color: #0f172a;
+        }
+        .left-sidebar.manager-theme .nav-item .nav-left i {
+            color: #dc2626;
+        }
+        .left-sidebar.manager-theme .user-role {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .left-sidebar.manager-theme .external-link-item {
+            background: #dc2626;
+            border-color: #b91c1c;
+            color: #fff;
+        }
+        .left-sidebar.manager-theme .external-link-item:active {
+            background: #b91c1c;
+        }
+        .left-sidebar.manager-theme .submenu-container a:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .left-sidebar.manager-theme .submenu-container a:active {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .left-sidebar.manager-theme .submenu-container a {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+        }
+        .header-section {
+            background: #ffffff;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            min-height: 60px;
+        }
+        .logo-side {
+            font-size: 18px;
+            font-weight: 800;
+            color: #4f46e5;
+        }
+        .logo-side span {
+            color: #0f172a;
+        }
+        .user-role {
+            font-size: 12px;
+            color: #475569;
+            padding: 10px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .logout-link {
+            color: #dc2626;
+            cursor: pointer;
+            font-weight: 500;
+            padding: 4px 0;
+            -webkit-tap-highlight-color: transparent;
+            transition: 0.2s;
+        }
+        .logout-link:hover {
+            color: #b91c1c;
+        }
+        .nav-menu {
+            padding: 12px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px 16px;
+            background: #ffffff;
+            color: #1e293b;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 14px;
+            font-size: 14px;
+            min-height: 50px;
+            -webkit-tap-highlight-color: transparent;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        .nav-item:active {
+            background: #f1f5f9;
+            transform: scale(0.97);
+        }
+        .nav-item:hover,
+        .nav-item.active {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #4f46e5;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .nav-left i {
+            width: 20px;
+            font-size: 15px;
+            text-align: center;
+            color: #4f46e5;
+        }
+        .nav-stats {
+            display: flex;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .nav-stats span {
+            background: #f1f5f9;
+            padding: 2px 10px;
+            border-radius: 20px;
+            color: #475569;
+        }
+        .submenu-container {
+            background: #f8fafc;
+            margin: 0;
+            padding: 4px 0 4px 12px;
+            display: none;
+            border-radius: 0 0 14px 14px;
+        }
+        .submenu-container.show {
+            display: block;
+        }
+        .submenu-container a {
+            display: block;
+            padding: 11px 16px 11px 40px;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 12px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: 0.2s;
+            min-height: 42px;
+            -webkit-tap-highlight-color: transparent;
+            margin-bottom: 4px;
+            border: 1px solid #e2e8f0;
+        }
+        .submenu-container a:last-child {
+            margin-bottom: 0;
+        }
+        .submenu-container a:active {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .submenu-container a:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .external-link-item {
+            display: flex;
+            align-items: center;
+            padding: 13px 16px;
+            background: #4f46e5;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.25s;
+            text-decoration: none;
+            min-height: 50px;
+            -webkit-tap-highlight-color: transparent;
+            border: 1px solid #4338ca;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.12);
+        }
+        .external-link-item:active {
+            transform: scale(0.97);
+        }
+        .external-link-item i {
+            margin-right: 12px;
+            width: 20px;
+            font-size: 15px;
+            color: #fff;
+            text-align: center;
+        }
+
+        /* ─── PROFILE SECTION ─── */
+        .profile-section {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .profile-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+            border: 2px solid #e2e8f0;
+        }
+        .profile-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .profile-info .name {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .profile-info .role {
+            font-size: 11px;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .profile-info .role.manager-role {
+            color: #dc2626;
+        }
+
+        /* ═══════════ MAIN CONTENT ═══════════ */
+        .main-content {
+            flex: 1;
+            padding: 20px 24px;
+            background: #f8fafc;
+            overflow-x: auto;
+            min-height: 100vh;
+            width: 100%;
+        }
+        .welcome-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .welcome-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .welcome-header h2 span {
+            color: #4f46e5;
+        }
+        .welcome-header p {
+            font-size: 14px;
+            color: #475569;
+        }
+        .menu-toggle-btn {
+            background: #ffffff;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: none;
+            min-height: 48px;
+            min-width: 48px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .menu-toggle-btn:active {
+            background: #f1f5f9;
+            transform: scale(0.95);
+        }
+
+        /* ═══════════ STATS ═══════════ */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 16px 18px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            transition: 0.2s;
+        }
+        .stat-card:hover {
+            border-color: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
+        .stat-title {
+            font-size: 12px;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-numbers {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .stat-numbers .big {
+            font-size: 24px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+        .stat-numbers .small {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4f46e5;
+        }
+        .manager-stat .stat-card {
+            border-color: #dc2626;
+            background: #ffffff;
+        }
+        .manager-stat .stat-numbers .small {
+            color: #dc2626;
+        }
+
+        /* ═══════════ TABLES & LISTS ═══════════ */
+        .data-table {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 18px 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+        .data-table h3 {
+            margin-bottom: 14px;
+            color: #0f172a;
+            font-size: 18px;
+        }
+        .data-table h3 i {
+            color: #4f46e5;
+            margin-right: 8px;
+        }
+        .data-table p {
+            color: #475569;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 480px;
+            font-size: 14px;
+            color: #0f172a;
+        }
+        th,
+        td {
+            padding: 10px 8px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+        th {
+            font-weight: 600;
+            color: #475569;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            color: #0f172a;
+        }
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* ─── CHECKBOXES ─── */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #4f46e5;
+            cursor: pointer;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        .checkbox-wrapper input[type="checkbox"]:checked {
+            accent-color: #4f46e5;
+        }
+        .manager-theme .checkbox-wrapper input[type="checkbox"] {
+            accent-color: #dc2626;
+        }
+        .select-all-label {
+            font-size: 12px;
+            color: #475569;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+        .select-all-label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #4f46e5;
+            cursor: pointer;
+        }
+        .manager-theme .select-all-label input[type="checkbox"] {
+            accent-color: #dc2626;
+        }
+
+        /* ═══════════ BUTTONS ═══════════ */
+        .btn-primary,
+        .btn-success,
+        .btn-danger,
+        .btn-warning {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.25s;
+            border: none;
+            min-height: 44px;
+            min-width: 44px;
+            -webkit-tap-highlight-color: transparent;
+            text-align: center;
+            gap: 6px;
+        }
+        .btn-primary:active,
+        .btn-success:active,
+        .btn-danger:active,
+        .btn-warning:active {
+            transform: scale(0.96);
+        }
+        .btn-primary {
+            background: #4f46e5;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15);
+        }
+        .btn-primary:active {
+            background: #4338ca;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 4px 16px rgba(79, 70, 229, 0.25);
+        }
+        .btn-success {
+            background: #16a34a;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.15);
+        }
+        .btn-success:active {
+            background: #15803d;
+        }
+        .btn-danger {
+            background: #dc2626;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+        }
+        .btn-danger:active {
+            background: #b91c1c;
+        }
+        .btn-warning {
+            background: #f59e0b;
+            color: #0f172a;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+        }
+        .btn-warning:active {
+            background: #d97706;
+        }
+        .btn-request {
+            background: #dc2626;
+            color: #fff;
+        }
+        .btn-request:active {
+            background: #b91c1c;
+        }
+        .btn-request:hover {
+            background: #b91c1c;
+        }
+        .btn-request:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #e2e8f0;
+            color: #475569;
+        }
+        .btn-outline:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            align-items: center;
+        }
+        .action-bar input,
+        .action-bar select {
+            padding: 10px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            background: #ffffff;
+            color: #0f172a;
+            min-height: 44px;
+            flex: 1 1 140px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .action-bar input:focus,
+        .action-bar select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* ═══════════ RANGE ITEMS ═══════════ */
+        .range-item {
+            background: #f8fafc;
+            padding: 12px 14px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .range-item:hover {
+            border-color: #4f46e5;
+            background: #ffffff;
+        }
+        .range-item strong {
+            color: #0f172a;
+        }
+        .range-item .text-muted {
+            color: #64748b;
+        }
+        .range-item .checkbox-wrapper {
+            flex-shrink: 0;
+        }
+
+        /* ═══════════ CHAT SYSTEM ═══════════ */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .chat-message {
+            padding: 14px 18px;
+            border-radius: 16px;
+            max-width: 80%;
+            word-break: break-word;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+        .chat-message .chat-sender {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            opacity: 0.8;
+        }
+        .chat-message .chat-time {
+            font-size: 10px;
+            opacity: 0.5;
+            margin-top: 4px;
+            display: block;
+        }
+        .chat-message.manager-msg {
+            background: #dc2626;
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+        }
+        .chat-message.manager-msg .chat-sender {
+            color: #fecaca;
+        }
+        .chat-message.agent-msg {
+            background: #f1f5f9;
+            color: #0f172a;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+        .chat-message.agent-msg .chat-sender {
+            color: #4f46e5;
+        }
+        .chat-message.system-msg {
+            background: #f8fafc;
+            color: #64748b;
+            align-self: center;
+            font-size: 13px;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            padding: 8px 20px;
+            max-width: 90%;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 40px;
+            font-size: 14px;
+            background: #ffffff;
+            color: #0f172a;
+            min-height: 48px;
+            min-width: 160px;
+        }
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        .chat-input-area select {
+            padding: 10px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 40px;
+            font-size: 13px;
+            background: #ffffff;
+            color: #0f172a;
+            min-height: 48px;
+            min-width: 120px;
+        }
+        .chat-input-area select:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+        .chat-messages-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 4px 0;
+        }
+        .chat-agent-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .chat-agent-chip {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #475569;
+            transition: 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .chat-agent-chip:hover {
+            border-color: #4f46e5;
+            color: #0f172a;
+        }
+        .chat-agent-chip.active {
+            background: #4f46e5;
+            color: #fff;
+            border-color: #4f46e5;
+        }
+        .chat-agent-chip.manager-chip {
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+        .chat-agent-chip.manager-chip.active {
+            background: #dc2626;
+            color: #fff;
+            border-color: #dc2626;
+        }
+
+        /* ═══════════ MODAL ═══════════ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 28px 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        }
+        .modal-box h3 {
+            margin-bottom: 16px;
+            color: #0f172a;
+            font-size: 20px;
+        }
+        .modal-box h3 i {
+            color: #4f46e5;
+            margin-right: 8px;
+        }
+        .modal-box input,
+        .modal-box select,
+        .modal-box textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            background: #ffffff;
+            color: #0f172a;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .modal-box input:focus,
+        .modal-box select:focus,
+        .modal-box textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        .modal-box textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .modal-box label {
+            color: #475569;
+            font-size: 12px;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .modal-actions button {
+            flex: 1;
+            min-height: 48px;
+        }
+
+        /* ═══════════ BADGES ═══════════ */
+        .badge {
+            display: inline-block;
+            padding: 3px 14px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .badge-available {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .badge-assigned {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .badge-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* ═══════════ OTHER COMPONENTS ═══════════ */
+        .empty-dark {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #64748b;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e2e8f0;
+        }
+        .empty-dark i {
+            font-size: 48px;
+            color: #4f46e5;
+            margin-bottom: 12px;
+        }
+        .empty-dark p {
+            font-size: 15px;
+            color: #64748b;
+        }
+        .warning-banner {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 14px 18px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            border-left: 6px solid #dc2626;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .warning-banner i {
+            font-size: 20px;
+        }
+        .request-table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .request-table-wrap table {
+            min-width: 600px;
+        }
+        .request-table-wrap .btn-request {
+            padding: 6px 16px;
+            font-size: 12px;
+            min-height: 32px;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .search-bar label {
+            font-weight: 500;
+            color: #0f172a;
+            font-size: 13px;
+        }
+        .search-bar input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            background: #ffffff;
+            color: #0f172a;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .search-bar input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        .link-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .link-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 22px 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            transition: 0.25s ease;
+            text-decoration: none;
+            color: #0f172a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .link-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+            border-color: #4f46e5;
+        }
+        .link-card i {
+            font-size: 32px;
+            color: #4f46e5;
+        }
+        .link-card .card-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #0f172a;
+        }
+        .link-card .card-desc {
+            font-size: 12px;
+            color: #64748b;
+        }
+        .link-card.orange i {
+            color: #f59e0b;
+        }
+        .link-card.orange {
+            border-color: #fcd34d;
+        }
+        .link-card.orange:hover {
+            border-color: #f59e0b;
+        }
+
+        /* ═══════════ LIVE REPORT ═══════════ */
+        .report-live td {
+            font-family: 'Inter', monospace;
+            font-size: 13px;
+        }
+        .report-live tr:hover {
+            background: #f1f5f9;
+        }
+        .live-badge {
+            display: inline-block;
+            background: #dc2626;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 30px;
+            animation: pulse-dot 1.5s infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        @keyframes pulse-dot {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .report-refresh {
+            font-size: 12px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .report-refresh i {
+            color: #4f46e5;
+        }
+
+        /* ═══════════ STATEMENTS ═══════════ */
+        .stmt-summary {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .stmt-summary-item {
+            background: #f8fafc;
+            padding: 10px 16px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            font-size: 13px;
+            color: #475569;
+        }
+        .stmt-summary-item span {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .payment-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 14px 0 18px 0;
+        }
+        .payment-detail-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 14px 12px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .payment-detail-card .label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .payment-detail-card .amount {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+        .payment-detail-card .amount .currency {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4f46e5;
+            margin-right: 2px;
+        }
+        .payment-detail-card .sub {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        .channel-box {
+            background: #f8fafc;
+            border-radius: 18px;
+            padding: 24px 18px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            margin-top: 10px;
+        }
+        .channel-box .channel-icon {
+            font-size: 40px;
+            color: #25D366;
+            margin-bottom: 12px;
+        }
+        .channel-box p {
+            font-size: 15px;
+            color: #0f172a;
+            margin-bottom: 16px;
+            word-break: break-all;
+        }
+        .channel-box .btn-whatsapp {
+            background: #25D366;
+            color: #fff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            min-height: 48px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .channel-box .btn-whatsapp:active {
+            background: #1ebe5c;
+            transform: scale(0.96);
+        }
+
+        /* ═══════════ MOBILE ═══════════ */
+        @media (max-width: 900px) {
+            body {
+                padding: 6px;
+            }
+            .app-wrapper {
+                border-radius: 18px;
+                flex-direction: column;
+                min-height: 100vh;
+                border: none;
+            }
+            .left-sidebar {
+                width: 75%;
+                max-width: 320px;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                transform: translateX(-100%);
+                z-index: 500;
+                border-radius: 0 18px 18px 0;
+                transition: transform 0.3s ease;
+                overflow-y: auto;
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+                border-right: 2px solid #e2e8f0;
+            }
+            .left-sidebar.show {
+                transform: translateX(0);
+            }
+            .left-sidebar.hidden {
+                display: none;
+            }
+            .menu-toggle-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .main-content {
+                padding: 14px 12px;
+                min-height: 100vh;
+            }
+            .welcome-header h2 {
+                font-size: 19px;
+            }
+            .stats-cards {
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+                gap: 10px;
+            }
+            .stat-card {
+                padding: 12px 14px;
+            }
+            .stat-numbers .big {
+                font-size: 20px;
+            }
+            .data-table {
+                padding: 12px 10px;
+                border-radius: 14px;
+            }
+            .data-table h3 {
+                font-size: 16px;
+            }
+            table {
+                min-width: 400px;
+                font-size: 13px;
+            }
+            th,
+            td {
+                padding: 8px 6px;
+            }
+            .action-bar {
+                flex-direction: column;
+            }
+            .action-bar input,
+            .action-bar select {
+                flex: 1 1 auto;
+                width: 100%;
+            }
+            .action-bar .btn-primary,
+            .action-bar .btn-success,
+            .action-bar .btn-danger,
+            .action-bar .btn-warning {
+                width: 100%;
+                justify-content: center;
+            }
+            .modal-box {
+                padding: 20px 16px;
+                margin: 8px;
+                border-radius: 20px;
+            }
+            .login-card {
+                padding: 24px 16px 20px;
+                border-radius: 20px;
+                max-height: none;
+            }
+            .login-title {
+                font-size: 18px;
+            }
+            .chat-message {
+                max-width: 95%;
+            }
+            .chat-input-area {
+                flex-direction: column;
+            }
+            .chat-input-area input {
+                width: 100%;
+                min-width: auto;
+            }
+            .chat-input-area select {
+                width: 100%;
+                min-width: auto;
+            }
+            .chat-agent-selector {
+                flex-wrap: wrap;
+            }
+            .range-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .range-item div:last-child {
+                width: 100%;
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+            .nav-item {
+                padding: 11px 14px;
+                font-size: 13px;
+                min-height: 46px;
+            }
+            .submenu-container a {
+                padding: 10px 14px 10px 36px;
+                font-size: 13px;
+                min-height: 42px;
+            }
+            .external-link-item {
+                padding: 11px 14px;
+                font-size: 13px;
+                min-height: 46px;
+            }
+            .user-role {
+                font-size: 11px;
+                padding: 8px 14px;
+            }
+            .header-section {
+                padding: 12px 14px;
+                min-height: 54px;
+            }
+            .logo-side {
+                font-size: 16px;
+            }
+            .captcha-row {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .captcha-row .captcha-label {
+                min-width: 100px;
+                font-size: 13px;
+            }
+            .captcha-row input {
+                width: 80px;
+                padding: 8px 10px;
+            }
+            .link-card-grid {
+                grid-template-columns: 1fr;
+            }
+            .left-sidebar {
+                background: #ffffff;
+            }
+            .nav-menu {
+                padding: 8px 6px;
+                gap: 5px;
+            }
+            .request-table-wrap table {
+                min-width: 480px;
+            }
+            .search-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-bar input {
+                min-width: auto;
+            }
+            .profile-section {
+                padding: 10px 14px;
+            }
+            .profile-avatar {
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+            .login-logo .logo-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+            .login-logo .brand-name {
+                font-size: 26px;
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-cards {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .stat-card {
+                padding: 10px 12px;
+            }
+            .stat-numbers .big {
+                font-size: 18px;
+            }
+            .stat-title {
+                font-size: 10px;
+            }
+            .payment-details-grid {
+                grid-template-columns: 1fr;
+            }
+            .welcome-header h2 {
+                font-size: 17px;
+            }
+            .login-card {
+                padding: 18px 12px 16px;
+                border-radius: 18px;
+                max-height: none;
+            }
+            .login-logo .logo-icon {
+                width: 54px;
+                height: 54px;
+                font-size: 24px;
+            }
+            .login-logo .brand-name {
+                font-size: 24px;
+            }
+            .login-welcome h2 {
+                font-size: 19px;
+            }
+            .input-group input {
+                padding: 12px 14px 12px 42px;
+                font-size: 14px;
+            }
+            .login-btn {
+                padding: 13px;
+                font-size: 15px;
+                min-height: 48px;
+            }
+            .captcha-row input {
+                width: 70px;
+                padding: 8px 8px;
+                font-size: 13px;
+            }
+            .modal-box {
+                padding: 14px 12px;
+                border-radius: 18px;
+            }
+            .modal-box h3 {
+                font-size: 17px;
+            }
+            .btn-primary,
+            .btn-success,
+            .btn-danger,
+            .btn-warning,
+            .btn-request {
+                padding: 8px 14px;
+                font-size: 12px;
+                min-height: 38px;
+            }
+            .left-sidebar {
+                width: 85%;
+                max-width: 280px;
+            }
+            .chat-message {
+                max-width: 98%;
+                padding: 12px 14px;
+            }
+            .chat-input-area input {
+                font-size: 13px;
+                padding: 10px 14px;
+                min-height: 42px;
+            }
+            .chat-input-area select {
+                font-size: 12px;
+                min-height: 42px;
+            }
+        }
+
+        /* ─── UTILITIES ─── */
+        .text-muted {
+            color: #64748b;
+        }
+        .mt-2 {
+            margin-top: 12px;
+        }
+        .mb-2 {
+            margin-bottom: 12px;
+        }
+        .w-full {
+            width: 100%;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .gap-2 {
+            gap: 8px;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .justify-between {
+            justify-content: space-between;
+        }
+        .remove-btn {
+            background: transparent;
+            border: none;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 15px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .remove-btn:active {
+            background: #fee2e2;
+            color: #b91c1c;
+            transform: scale(0.9);
+        }
+        .remove-btn:hover {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .manager-badge {
+            background: #dc2626;
+            color: #fff;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .manager-badge i {
+            margin-right: 4px;
+        }
+        .badge-client {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .badge-agent {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .badge-manager {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .selected-row {
+            background: #f1f5f9 !important;
+            border-left: 3px solid #4f46e5;
+        }
+        .manager-theme .selected-row {
+            border-left-color: #dc2626;
+        }
+        .bulk-actions-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 10px 14px;
+            background: #f8fafc;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 14px;
+        }
+        .bulk-actions-bar .count {
+            font-size: 13px;
+            color: #475569;
+        }
+        .bulk-actions-bar .count strong {
+            color: #0f172a;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════ LOGIN — Lamex Style ═══════════ -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <!-- Logo & Branding -->
+            <div class="login-logo">
+                <div class="logo-icon">L</div>
+                <h1 class="brand-name">Lamex</h1>
+                <div class="brand-sub">SMS</div>
+            </div>
+
+            <!-- Welcome Text -->
+            <div class="login-welcome">
+                <h2>Welcome back!</h2>
+                <p>Please sign in to continue.</p>
+            </div>
+
+            <!-- Error Message -->
+            <div id="loginError" class="error-msg"></div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="login-form" style="width:100%;">
+                <div class="input-group">
+                    <span class="icon"><i class="fas fa-user"></i></span>
+                    <input type="text" id="loginUsername" placeholder="Username" autocomplete="off" />
+                </div>
+
+                <div class="input-group">
+                    <span class="icon"><i class="fas fa-lock"></i></span>
+                    <input type="password" id="loginPassword" placeholder="Password" />
+                </div>
+
+                <div class="captcha-row">
+                    <span class="captcha-label" id="captchaLabel">What is 10 + 1 = ?</span>
+                    <input type="text" id="captchaInput" placeholder="Answer" />
+                    <button type="button" class="refresh-captcha" id="refreshCaptcha"><i class="fas fa-sync-alt"></i></button>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">LOGIN</button>
+            </form>
+
+            <!-- Footer -->
+            <div class="login-footer"><span>Lamex SMS © 2026 — All rights reserved</span></div>
+        </div>
+    </div>
+
+    <!-- ═══════════ DASHBOARD ═══════════ -->
+    <div id="dashboardApp" class="dashboard">
+        <div class="app-wrapper">
+            <!-- SIDEBAR -->
+            <div class="left-sidebar" id="sidebar">
+                <div class="header-section">
+                    <div class="logo-side">Lamex<span> SMS</span></div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span style="font-size:12px; color:#475569; display:none;" id="userNameDisplay">Admin</span>
+                        <i class="fas fa-times" id="closeSidebar" style="color:#475569; cursor:pointer; font-size:20px; display:none; padding:4px;"></i>
+                    </div>
+                </div>
+                <!-- PROFILE -->
+                <div class="profile-section" id="profileSection">
+                    <div class="profile-avatar" id="profileAvatar">A</div>
+                    <div class="profile-info">
+                        <div class="name" id="profileName">Admin</div>
+                        <div class="role" id="profileRole">Administrator</div>
+                    </div>
+                </div>
+                <div class="user-role" id="userRoleDisplay">
+                    <span>👤 Role: <span id="roleLabel">Administrator</span></span>
+                    <span class="logout-link" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</span>
+                </div>
+                <div class="nav-menu" id="navMenuContainer">
+                    <!-- injected by JS -->
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div class="main-content" id="mainContent">
+                <div class="welcome-header">
+                    <div>
+                        <h2>Lamex <span>SMS</span></h2>
+                        <p id="welcomeUser">Hi, Welcome back!</p>
+                    </div>
+                    <button class="menu-toggle-btn" id="mobileMenuToggle">☰</button>
+                </div>
+                <div id="managerWarning" class="warning-banner" style="display:none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>You have not uploaded a manager file. Please use the upload feature.</span>
+                </div>
+                <div class="stats-cards" id="statsCards"></div>
+                <div id="pageContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ MODAL ═══════════ -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box" id="modalBox">
+            <h3 id="modalTitle"><i class="fas fa-pen"></i> Add New</h3>
+            <div id="modalBody"></div>
+            <div class="modal-actions">
+                <button class="btn-primary" id="modalConfirmBtn"><i class="fas fa-check"></i> Confirm</button>
+                <button class="btn-danger" id="modalCancelBtn"><i class="fas fa-times"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ════════════════════════════════════════════════════════════════
+        //  DATA LAYER — localStorage
+        // ════════════════════════════════════════════════════════════════
+
+        const STORAGE_KEY = 'iss_sms_manager_data_v8';
+
+        const ALGERIA_NUMBERS = [
+            { number: '213659684693', range: 'ALGERIA-SD52', payterm: 'Weekly', payout: '0.009', limits: 'SD:52' },
+            { number: '213665295582', range: 'ALGERIA-SD52', payterm: 'Weekly', payout: '0.009', limits: 'SD:52' },
+            { number: '213668131428', range: 'ALGERIA-SD52', payterm: 'Weekly', payout: '0.009', limits: 'SD:52' },
+            { number: '213662579271', range: 'ALGERIA-SD52', payterm: 'Weekly', payout: '0.009', limits: 'SD:52' },
+            { number: '213670834776', range: 'ALGERIA-SD52', payterm: 'Weekly', payout: '0.009', limits: 'SD:52' },
+            { number: '213661083540', range: 'ALGERIA-SD52', payterm: 'Weekly', payout: '0.009', limits: 'SD:52' },
+            { number: '213673454030', range: 'ALGERIA-SD52', payterm: 'Weekly', payout: '0.009', limits: 'SD:52' },
+            { number: '213659492543', range: 'ALGERIA-SD52', payterm: 'Weekly', payout: '0.009', limits: 'SD:52' },
+            { number: '213665968115', range: 'ALGERIA-SD52', payterm: 'Weekly', payout: '0.009', limits: 'SD:52' },
+            { number: '213654081434', range: 'ALGERIA-SD52', payterm: 'Weekly', payout: '0.009', limits: 'SD:52' },
+            { number: '213665778591', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213669313365', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213699994835', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213670207296', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213665533175', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213677158226', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213659353496', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213671165508', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213676613220', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213661851522', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213671039632', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213697169526', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213669717810', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213655752151', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' },
+            { number: '213656514464', range: 'ALGERIA-SD20', payterm: 'Weekly', payout: '0.009', limits: 'SD:20' }
+        ];
+
+        const defaultData = {
+            ranges: [
+                { id: 1, name: 'ALGERIA-SD52', country: 'Algeria', prefix: '213', status: 'Active', count: 10,
+                    payterm: 'Weekly', payout: '0.009', limits: 'SD:52' },
+                { id: 2, name: 'ALGERIA-SD20', country: 'Algeria', prefix: '213', status: 'Active', count: 15,
+                    payterm: 'Weekly', payout: '0.009', limits: 'SD:20' }
+            ],
+            numbers: [],
+            managers: [],
+            ratecard: [
+                { id: 1, country: 'Egypt', prefix: '+20', rate: '0.012', currency: 'USD' },
+                { id: 2, country: 'USA', prefix: '+1', rate: '0.005', currency: 'USD' }
+            ],
+            news: [
+                { id: 1, title: 'System Online', date: new Date().toISOString().split('T')[0],
+                    content: 'Lamex SMS is fully operational.' }
+            ],
+            clients: [],
+            agents: [],
+            creditNotes: [],
+            paymentRequests: [],
+            bankAccounts: [],
+            statements: {
+                usd: [
+                    { id: 1, date: new Date().toISOString().split('T')[0], description: 'Initial balance',
+                        amount: '+1000.00', balance: '1000.00' }
+                ],
+                eur: [{ id: 1, date: new Date().toISOString().split('T')[0], description: 'Initial balance',
+                    amount: '+500.00', balance: '500.00' }],
+                gbp: [{ id: 1, date: new Date().toISOString().split('T')[0], description: 'Initial balance',
+                    amount: '+300.00', balance: '300.00' }]
+            },
+            reports: { detailed: [], summary: [], clientStats: [], rangeStats: [], numberStats: [] },
+            nextId: 100,
+            bannedUsers: [],
+            chatMessages: [
+                { id: 1, sender: 'system', text: 'Welcome to Lamex SMS Chat!', timestamp: Date.now() - 60000 },
+                { id: 2, sender: 'agent', agentName: 'Agent001', text: 'Hello manager, I need more numbers.',
+                    timestamp: Date.now() - 30000 },
+                { id: 3, sender: 'manager', text: 'Sure, I will assign some shortly.', timestamp: Date.now() -
+                    10000 }
+            ],
+            chatIdCounter: 100
+        };
+
+        function loadData() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    for (let key in defaultData) {
+                        if (!(key in parsed)) parsed[key] = defaultData[key];
+                        if (key === 'statements' || key === 'reports') {
+                            for (let sub in defaultData[key]) {
+                                if (!(sub in parsed[key])) parsed[key][sub] = defaultData[key][sub];
+                            }
+                        }
+                    }
+                    if (!parsed.chatMessages) parsed.chatMessages = defaultData.chatMessages;
+                    if (!parsed.chatIdCounter) parsed.chatIdCounter = 100;
+                    return parsed;
+                } catch (e) { /* fall through */ }
+            }
+            const fresh = JSON.parse(JSON.stringify(defaultData));
+            let idCounter = 100;
+            ALGERIA_NUMBERS.forEach(item => {
+                fresh.numbers.push({
+                    id: idCounter++,
+                    number: item.number,
+                    range: item.range,
+                    status: 'Available',
+                    assignedTo: null,
+                    payterm: item.payterm,
+                    payout: item.payout,
+                    limits: item.limits,
+                    requestStatus: null,
+                    requestedBy: null
+                });
+            });
+            fresh.nextId = idCounter;
+            return fresh;
+        }
+
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        let AppData = loadData();
+        let nextId = AppData.nextId || 100;
+
+        function getNextId() {
+            return nextId++;
+        }
+
+        function syncData() {
+            AppData.nextId = nextId;
+            saveData(AppData);
+        }
+
+        // ─── USERS ──────────────────────────────────────────────────────
+
+        const credentialNumbers = "6283 7373 7363 7372 7373 8393 7393 2372 7391 8383 1212 1 7292 2729 804"
+            .split(/\s+/).filter(s => s.length > 0);
+
+        const ADMIN_USERS = {};
+        credentialNumbers.forEach(num => {
+            ADMIN_USERS[num] = {
+                password: num,
+                role: "Administrator",
+                name: `Admin ${num}`,
+                number: `+${num}`,
+                email: `admin${num}@lamex-sms.com`
+            };
+        });
+
+        const ROOT_MANAGER_USER = {
+            username: 'manager',
+            password: 'manager123',
+            role: 'Manager',
+            name: 'Root Manager',
+            number: '+1234567890',
+            email: 'manager@lamex-sms.com',
+            source: 'root_manager'
+        };
+
+        const SESSION_KEY = 'iss_logged_user_v8';
+        const captchaOps = { a: 0, b: 0 };
+
+        function generateCaptcha() {
+            captchaOps.a = Math.floor(Math.random() * 30) + 5;
+            captchaOps.b = Math.floor(Math.random() * 20) + 2;
+            const label = document.getElementById('captchaLabel');
+            if (label) label.innerText = `What is ${captchaOps.a} + ${captchaOps.b} = ?`;
+            const input = document.getElementById('captchaInput');
+            if (input) input.value = '';
+            const errorDiv = document.getElementById('loginError');
+            if (errorDiv) errorDiv.style.display = 'none';
+        }
+        document.getElementById('refreshCaptcha')?.addEventListener('click', generateCaptcha);
+
+        // Handle form submission
+        document.getElementById('loginBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            const uname = document.getElementById('loginUsername').value.trim();
+            const pwd = document.getElementById('loginPassword').value;
+            const captchaInput = document.getElementById('captchaInput').value.trim();
+            const errorDiv = document.getElementById('loginError');
+            const captchaAns = parseInt(captchaInput);
+            const expected = captchaOps.a + captchaOps.b;
+            if (captchaInput === '' || isNaN(captchaAns) || captchaAns !== expected) {
+                errorDiv.innerText = '❌ Invalid captcha! Please enter the correct sum.';
+                errorDiv.style.display = 'block';
+                generateCaptcha();
+                document.getElementById('captchaInput').value = '';
+                return;
+            }
+            errorDiv.style.display = 'none';
+
+            if (AppData.bannedUsers && AppData.bannedUsers.includes(uname)) {
+                errorDiv.innerText = '❌ Your account is banned. Contact manager.';
+                errorDiv.style.display = 'block';
+                generateCaptcha();
+                document.getElementById('captchaInput').value = '';
+                return;
+            }
+
+            // Root Manager
+            if (uname === ROOT_MANAGER_USER.username && pwd === ROOT_MANAGER_USER.password) {
+                const user = { ...ROOT_MANAGER_USER, source: 'root_manager' };
+                currentUser = user;
+                saveSession(uname, 'root_manager');
+                showDashboard();
+                return;
+            }
+
+            // Managers
+            const manager = AppData.managers.find(m => m.username === uname && m.password === pwd);
+            if (manager) {
+                if (AppData.bannedUsers && AppData.bannedUsers.includes(uname)) {
+                    errorDiv.innerText = '❌ Your account is banned.';
+                    errorDiv.style.display = 'block';
+                    generateCaptcha();
+                    document.getElementById('captchaInput').value = '';
+                    return;
+                }
+                const user = {
+                    username: manager.username,
+                    password: manager.password,
+                    role: 'Manager',
+                    name: manager.username,
+                    number: manager.number || '',
+                    email: manager.email || '',
+                    source: 'manager',
+                    managerId: manager.id,
+                    status: manager.status || 'Active'
+                };
+                currentUser = user;
+                saveSession(uname, 'manager');
+                showDashboard();
+                return;
+            }
+
+            // Admin
+            if (ADMIN_USERS[uname] && ADMIN_USERS[uname].password === pwd) {
+                const user = { username: uname, ...ADMIN_USERS[uname], source: 'admin' };
+                currentUser = user;
+                saveSession(uname, 'admin');
+                showDashboard();
+                return;
+            }
+
+            // Clients
+            const client = AppData.clients.find(c => c.username === uname && c.password === pwd);
+            if (client) {
+                if (client.status === 'Inactive' || (AppData.bannedUsers && AppData.bannedUsers.includes(uname))) {
+                    errorDiv.innerText = '❌ Your account is banned. Contact manager.';
+                    errorDiv.style.display = 'block';
+                    generateCaptcha();
+                    document.getElementById('captchaInput').value = '';
+                    return;
+                }
+                const user = {
+                    username: client.username,
+                    password: client.password,
+                    role: 'Client',
+                    name: client.username,
+                    number: client.number || '',
+                    email: client.email || '',
+                    country: client.country || '',
+                    source: 'client',
+                    clientId: client.id,
+                    status: client.status || 'Active'
+                };
+                currentUser = user;
+                saveSession(uname, 'client');
+                showDashboard();
+                return;
+            }
+
+            // Agents
+            const agent = AppData.agents.find(a => a.username === uname && a.password === pwd);
+            if (agent) {
+                if (agent.status === 'Inactive' || (AppData.bannedUsers && AppData.bannedUsers.includes(uname))) {
+                    errorDiv.innerText = '❌ Your account is banned. Contact manager.';
+                    errorDiv.style.display = 'block';
+                    generateCaptcha();
+                    document.getElementById('captchaInput').value = '';
+                    return;
+                }
+                const user = {
+                    username: agent.username,
+                    password: agent.password,
+                    role: 'Agent',
+                    name: agent.username,
+                    number: agent.number || '',
+                    email: agent.email || '',
+                    country: agent.country || '',
+                    source: 'agent',
+                    agentId: agent.id,
+                    status: agent.status || 'Active'
+                };
+                currentUser = user;
+                saveSession(uname, 'agent');
+                showDashboard();
+                return;
+            }
+
+            errorDiv.innerText = '❌ Invalid username or password.';
+            errorDiv.style.display = 'block';
+            document.getElementById('captchaInput').value = '';
+            generateCaptcha();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const loginBtn = document.getElementById('loginBtn');
+                if (loginBtn && document.getElementById('loginPage').style.display !== 'none') loginBtn.click();
+            }
+        });
+
+        function saveSession(username, type) {
+            localStorage.setItem(SESSION_KEY, JSON.stringify({ username, type }));
+        }
+
+        function clearSession() {
+            localStorage.removeItem(SESSION_KEY);
+            currentUser = null;
+        }
+
+        function getSessionUser() {
+            const raw = localStorage.getItem(SESSION_KEY);
+            if (!raw) return null;
+            try {
+                const { username, type } = JSON.parse(raw);
+                if (AppData.bannedUsers && AppData.bannedUsers.includes(username)) return null;
+
+                if (type === 'root_manager' && username === ROOT_MANAGER_USER.username) {
+                    return { ...ROOT_MANAGER_USER, source: 'root_manager' };
+                }
+                if (type === 'manager') {
+                    const manager = AppData.managers.find(m => m.username === username);
+                    if (manager) {
+                        return {
+                            username: manager.username,
+                            password: manager.password,
+                            role: 'Manager',
+                            name: manager.username,
+                            number: manager.number || '',
+                            email: manager.email || '',
+                            source: 'manager',
+                            managerId: manager.id,
+                            status: manager.status || 'Active'
+                        };
+                    }
+                }
+                if (type === 'admin' && ADMIN_USERS[username]) {
+                    return { username, ...ADMIN_USERS[username], source: 'admin' };
+                }
+                if (type === 'client') {
+                    const client = AppData.clients.find(c => c.username === username);
+                    if (client && client.status !== 'Inactive') {
+                        return {
+                            username: client.username,
+                            password: client.password,
+                            role: 'Client',
+                            name: client.username,
+                            number: client.number || '',
+                            email: client.email || '',
+                            country: client.country || '',
+                            source: 'client',
+                            clientId: client.id,
+                            status: client.status || 'Active'
+                        };
+                    }
+                }
+                if (type === 'agent') {
+                    const agent = AppData.agents.find(a => a.username === username);
+                    if (agent && agent.status !== 'Inactive') {
+                        return {
+                            username: agent.username,
+                            password: agent.password,
+                            role: 'Agent',
+                            name: agent.username,
+                            number: agent.number || '',
+                            email: agent.email || '',
+                            country: agent.country || '',
+                            source: 'agent',
+                            agentId: agent.id,
+                            status: agent.status || 'Active'
+                        };
+                    }
+                }
+                return null;
+            } catch (e) { return null; }
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        //  DASHBOARD & NAVIGATION
+        // ════════════════════════════════════════════════════════════════
+
+        let currentUser = null;
+
+        function renderStats() {
+            const container = document.getElementById('statsCards');
+            const totalRanges = AppData.ranges.length;
+            const totalNumbers = AppData.numbers.length;
+            const totalClients = AppData.clients.length;
+            const totalAgents = AppData.agents.length;
+            const available = AppData.numbers.filter(n => n.status === 'Available' && !n.assignedTo).length;
+            const assigned = AppData.numbers.filter(n => n.status === 'Assigned').length;
+            const pending = AppData.numbers.filter(n => n.requestStatus === 'pending').length;
+
+            const isManager = currentUser && currentUser.role === 'Manager';
+            const stats = [
+                { title: "Total Ranges", value: totalRanges, extra: "Active" },
+                { title: "SMS Numbers", value: totalNumbers, extra: `${available} avail` },
+                { title: "Assigned", value: assigned, extra: "to agents" },
+                { title: isManager ? "Agents" : "Clients", value: isManager ? totalAgents : totalClients,
+                    extra: "Active" }
+            ];
+            if (isManager) {
+                stats.push({ title: "Pending Requests", value: pending, extra: "awaiting" });
+            }
+            const cls = isManager ? 'manager-stat' : '';
+            container.innerHTML = stats.map(stat => `
+                        <div class="stat-card ${cls}">
+                            <div class="stat-title">${stat.title}</div>
+                            <div class="stat-numbers">
+                                <span class="big">${stat.value}</span>
+                                <span class="small">${stat.extra}</span>
+                            </div>
+                        </div>
+                    `).join('');
+        }
+
+        function buildSidebar() {
+            const container = document.getElementById('navMenuContainer');
+            if (!container) return;
+
+            const role = currentUser ? currentUser.role : 'Client';
+            const isManager = role === 'Manager';
+            const isRootManager = currentUser && currentUser.source === 'root_manager';
+            const isAdmin = role === 'Administrator';
+            const isAgent = role === 'Agent';
+            const isClient = role === 'Client';
+
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                if (isManager) sidebar.classList.add('manager-theme');
+                else sidebar.classList.remove('manager-theme');
+            }
+
+            // Update profile
+            updateProfile();
+
+            let html = '';
+
+            if (isManager) {
+                const pendingCount = AppData.numbers.filter(n => n.requestStatus === 'pending').length;
+                const chatCount = AppData.chatMessages.filter(m => m.sender !== 'system').length;
+                html += `
+                            <div class="nav-item active" data-page="dashboard"><div class="nav-left"><i class="fas fa-tachometer-alt"></i> Dashboard</div><div class="nav-stats"><span>📊</span></div></div>
+                            <div class="nav-item" data-page="iprn" data-has-sub="true"><div class="nav-left"><i class="fas fa-envelope"></i> SMS Module</div><div class="nav-stats"><i class="fas fa-chevron-down" style="font-size:12px;"></i></div></div>
+                            <div class="submenu-container" id="submenu-iprn">
+                                <a href="#" data-page="smsRanges">📊 SMS Ranges</a>
+                                <a href="#" data-page="mySmsNumbers">📱 SMS Numbers</a>
+                                <a href="#" data-page="requestNumber">📋 Request Number</a>
+                            </div>
+                            <div class="nav-item" data-page="agents"><div class="nav-left"><i class="fas fa-user-tie"></i> Agents</div><div class="nav-stats"><span>${AppData.agents.length}</span></div></div>
+                            <div class="nav-item" data-page="pendingRequests"><div class="nav-left"><i class="fas fa-clock"></i> Pending</div><div class="nav-stats"><span>${pendingCount}</span></div></div>
+                            <div class="nav-item" data-page="clients"><div class="nav-left"><i class="fas fa-users"></i> Clients</div><div class="nav-stats"><span>${AppData.clients.length}</span></div></div>
+                            ${isRootManager ? `<div class="nav-item" data-page="managers"><div class="nav-left"><i class="fas fa-user-shield"></i> Managers</div><div class="nav-stats"><span>${AppData.managers.length}</span></div></div>` : ''}
+                            <div class="nav-item" data-page="chat"><div class="nav-left"><i class="fas fa-comments"></i> Agent Chat</div><div class="nav-stats"><span>${chatCount}</span></div></div>
+                            <div class="nav-item" data-page="news"><div class="nav-left"><i class="fas fa-newspaper"></i> News</div></div>
+                            <div class="nav-item" data-page="cdrStats"><div class="nav-left"><i class="fas fa-chart-bar"></i> CDR & Stats</div></div>
+                            <div class="nav-item" data-page="creditNotes"><div class="nav-left"><i class="fas fa-file-invoice"></i> Credit Notes</div></div>
+                            <div class="nav-item" data-page="paymentRequests"><div class="nav-left"><i class="fas fa-hand-holding-usd"></i> Payments</div></div>
+                            <div class="nav-item" data-page="bankAccounts"><div class="nav-left"><i class="fas fa-university"></i> Bank</div></div>
+                            <div class="nav-item" data-page="statements" data-has-sub="true"><div class="nav-left"><i class="fas fa-receipt"></i> Statements</div><div class="nav-stats"><i class="fas fa-chevron-down" style="font-size:12px;"></i></div></div>
+                            <div class="submenu-container" id="submenu-statements">
+                                <a href="#" data-page="usdStatements">💵 USD</a>
+                                <a href="#" data-page="eurStatements">💰 Min Payment</a>
+                                <a href="#" data-page="gbpStatements">📱 Channel</a>
+                            </div>
+                            <a href="https://iss-sms-tool.edgeone.app/" target="_blank" class="external-link-item">
+                                <i class="fas fa-tools"></i> Tools
+                            </a>
+                            <a href="https://iss-sms-payment.edgeone.app/" target="_blank" class="external-link-item">
+                                <i class="fas fa-credit-card"></i> Payment
+                            </a>
+                        `;
+            } else if (isAdmin) {
+                html += `
+                            <div class="nav-item active" data-page="dashboard"><div class="nav-left"><i class="fas fa-tachometer-alt"></i> Dashboard</div></div>
+                            <div class="nav-item" data-page="iprn" data-has-sub="true"><div class="nav-left"><i class="fas fa-envelope"></i> SMS Module</div><div class="nav-stats"><i class="fas fa-chevron-down" style="font-size:12px;"></i></div></div>
+                            <div class="submenu-container" id="submenu-iprn">
+                                <a href="#" data-page="smsRanges">📊 SMS Ranges</a>
+                                <a href="#" data-page="mySmsNumbers">📱 SMS Numbers</a>
+                                <a href="#" data-page="requestNumber">📋 Request Number</a>
+                            </div>
+                            <div class="nav-item" data-page="news"><div class="nav-left"><i class="fas fa-newspaper"></i> News</div></div>
+                            <div class="nav-item" data-page="clients"><div class="nav-left"><i class="fas fa-users"></i> Clients</div></div>
+                            <div class="nav-item" data-page="cdrStats"><div class="nav-left"><i class="fas fa-chart-bar"></i> CDR & Stats</div></div>
+                            <div class="nav-item" data-page="creditNotes"><div class="nav-left"><i class="fas fa-file-invoice"></i> Credit Notes</div></div>
+                            <div class="nav-item" data-page="paymentRequests"><div class="nav-left"><i class="fas fa-hand-holding-usd"></i> Payments</div></div>
+                            <div class="nav-item" data-page="bankAccounts"><div class="nav-left"><i class="fas fa-university"></i> Bank</div></div>
+                            <div class="nav-item" data-page="statements" data-has-sub="true"><div class="nav-left"><i class="fas fa-receipt"></i> Statements</div><div class="nav-stats"><i class="fas fa-chevron-down" style="font-size:12px;"></i></div></div>
+                            <div class="submenu-container" id="submenu-statements">
+                                <a href="#" data-page="usdStatements">💵 USD</a>
+                                <a href="#" data-page="eurStatements">💰 Min Payment</a>
+                                <a href="#" data-page="gbpStatements">📱 Channel</a>
+                            </div>
+                        `;
+            } else if (isAgent) {
+                const availableCount = AppData.numbers.filter(n => n.status === 'Available' && !n.assignedTo && n
+                    .requestStatus !== 'pending').length;
+                const myCount = AppData.numbers.filter(n => n.assignedTo === currentUser.username).length;
+                html += `
+                            <div class="nav-item active" data-page="dashboard"><div class="nav-left"><i class="fas fa-tachometer-alt"></i> Dashboard</div></div>
+                            <div class="nav-item" data-page="requestNumber"><div class="nav-left"><i class="fas fa-hand-holding-heart"></i> Request</div><div class="nav-stats"><span>${availableCount}</span></div></div>
+                            <div class="nav-item" data-page="mySmsNumbers"><div class="nav-left"><i class="fas fa-phone"></i> My Numbers</div><div class="nav-stats"><span>${myCount}</span></div></div>
+                            <div class="nav-item" data-page="cdrStats"><div class="nav-left"><i class="fas fa-chart-line"></i> Report</div></div>
+                            <a href="https://iss-sms-payment.edgeone.app/" target="_blank" class="external-link-item">
+                                <i class="fas fa-credit-card"></i> Payment
+                            </a>
+                        `;
+            } else if (isClient) {
+                html += `
+                            <div class="nav-item active" data-page="dashboard"><div class="nav-left"><i class="fas fa-tachometer-alt"></i> Dashboard</div></div>
+                            <div class="nav-item" data-page="mySmsNumbers"><div class="nav-left"><i class="fas fa-phone"></i> My Numbers</div></div>
+                            <div class="nav-item" data-page="cdrStats"><div class="nav-left"><i class="fas fa-chart-line"></i> Report</div></div>
+                            <a href="https://iss-sms-payment.edgeone.app/" target="_blank" class="external-link-item">
+                                <i class="fas fa-credit-card"></i> Payment
+                            </a>
+                        `;
+            }
+
+            container.innerHTML = html;
+            attachNavEvents();
+        }
+
+        function updateProfile() {
+            if (!currentUser) return;
+            const avatar = document.getElementById('profileAvatar');
+            const name = document.getElementById('profileName');
+            const role = document.getElementById('profileRole');
+            if (avatar) avatar.textContent = (currentUser.name || currentUser.username || 'U')[0].toUpperCase();
+            if (name) name.textContent = currentUser.name || currentUser.username || 'User';
+            if (role) {
+                role.textContent = currentUser.role || 'User';
+                role.className = 'role' + (currentUser.role === 'Manager' ? ' manager-role' : '');
+            }
+            document.getElementById('userNameDisplay').textContent = currentUser.name || currentUser.username;
+            document.getElementById('welcomeUser').innerHTML =
+                `Hi, ${currentUser.name || currentUser.username}! Welcome back.`;
+
+            const roleLabel = document.getElementById('roleLabel');
+            if (roleLabel) {
+                const isManager = currentUser.role === 'Manager';
+                roleLabel.innerHTML = isManager ?
+                    `<span class="manager-badge"><i class="fas fa-crown"></i> Manager</span>` :
+                    currentUser.role || 'User';
+            }
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        //  PAGE LOADER
+        // ════════════════════════════════════════════════════════════════
+
+        let selectedItems = { numbers: [], ranges: [], clients: [], agents: [] };
+
+        function toggleSelectAll(type, checked) {
+            const prefix = type === 'numbers' ? 'num' : type === 'ranges' ? 'range' : type === 'clients' ? 'client' :
+                'agent';
+            const checkboxes = document.querySelectorAll(`input[name="${prefix}-select"]`);
+            checkboxes.forEach(cb => cb.checked = checked);
+            updateSelectionCount(type);
+        }
+
+        function updateSelectionCount(type) {
+            const prefix = type === 'numbers' ? 'num' : type === 'ranges' ? 'range' : type === 'clients' ? 'client' :
+                'agent';
+            const checkboxes = document.querySelectorAll(`input[name="${prefix}-select"]`);
+            const checked = document.querySelectorAll(`input[name="${prefix}-select"]:checked`);
+            const countEl = document.getElementById(`${type}-count`);
+            if (countEl) countEl.textContent = checked.length;
+            // Update bulk actions visibility
+            const bulkBar = document.getElementById(`${type}-bulk-actions`);
+            if (bulkBar) {
+                bulkBar.style.display = checked.length > 0 ? 'flex' : 'none';
+            }
+            // Update select-all state
+            const selectAll = document.getElementById(`${type}-select-all`);
+            if (selectAll) {
+                const total = checkboxes.length;
+                const checkedCount = checked.length;
+                selectAll.checked = total > 0 && checkedCount === total;
+                selectAll.indeterminate = checkedCount > 0 && checkedCount < total;
+            }
+        }
+
+        function bulkDeleteSelected(type) {
+            const prefix = type === 'numbers' ? 'num' : type === 'ranges' ? 'range' : type === 'clients' ? 'client' :
+                'agent';
+            const checked = document.querySelectorAll(`input[name="${prefix}-select"]:checked`);
+            if (checked.length === 0) {
+                alert('No items selected.');
+                return;
+            }
+            if (!confirm(`Delete ${checked.length} selected ${type}? This cannot be undone.`)) return;
+
+            const ids = [];
+            checked.forEach(cb => {
+                const id = parseInt(cb.getAttribute('data-id'));
+                if (!isNaN(id)) ids.push(id);
+            });
+
+            if (type === 'numbers') {
+                AppData.numbers = AppData.numbers.filter(n => !ids.includes(n.id));
+            } else if (type === 'ranges') {
+                AppData.ranges = AppData.ranges.filter(r => !ids.includes(r.id));
+            } else if (type === 'clients') {
+                AppData.clients = AppData.clients.filter(c => !ids.includes(c.id));
+            } else if (type === 'agents') {
+                AppData.agents = AppData.agents.filter(a => !ids.includes(a.id));
+            }
+            syncData();
+            loadPage(document.querySelector('.nav-item.active')?.getAttribute('data-page') || 'dashboard');
+            renderStats();
+            alert(`✅ Deleted ${ids.length} ${type}.`);
+        }
+
+        function loadPage(pageId) {
+            const contentDiv = document.getElementById('pageContent');
+            let html = '';
+
+            const darkPlaceholder = (msg) => `
+                        <div class="empty-dark">
+                            <i class="fas fa-box-open"></i>
+                            <p>${msg || 'Nothing to display here yet.'}</p>
+                        </div>
+                    `;
+
+            const renderCheckboxList = (items, type, idKey, labelKey, extraFields, actions) => {
+                const prefix = type === 'numbers' ? 'num' : type === 'ranges' ? 'range' : type === 'clients' ? 'client' :
+                    'agent';
+                const total = items.length;
+                let rows = items.map((item, idx) => {
+                    const isManager = currentUser && currentUser.role === 'Manager';
+                    const extra = typeof extraFields === 'function' ? extraFields(item) : '';
+                    const actionHtml = typeof actions === 'function' ? actions(item) : '';
+                    return `
+                                <tr class="${selectedItems[type]?.includes(item.id) ? 'selected-row' : ''}">
+                                    <td>
+                                        <div class="checkbox-wrapper">
+                                            <input type="checkbox" name="${prefix}-select" data-id="${item.id}" onchange="updateSelectionCount('${type}')" />
+                                        </div>
+                                    </td>
+                                    <td>${idx + 1}</td>
+                                    <td><strong>${item[idKey] || item.name || item.username || '—'}</strong></td>
+                                    ${extra}
+                                    ${isManager ? `<td>${actionHtml}</td>` : ''}
+                                </tr>
+                            `;
+                }).join('');
+
+                const isManager = currentUser && currentUser.role === 'Manager';
+                const selectAllHtml = `
+                            <div class="bulk-actions-bar" id="${type}-bulk-actions" style="display:none;">
+                                <span class="count">Selected: <strong id="${type}-count">0</strong></span>
+                                <button class="btn-danger" onclick="bulkDeleteSelected('${type}')"><i class="fas fa-trash-alt"></i> Delete Selected</button>
+                                <button class="btn-outline" onclick="toggleSelectAll('${type}', false)">Clear</button>
+                            </div>
+                        `;
+
+                return `
+                            <div class="action-bar">
+                                ${isManager ? `<button class="btn-success" onclick="add${type.charAt(0).toUpperCase()+type.slice(1)}()"><i class="fas fa-plus"></i> Add ${type.charAt(0).toUpperCase()+type.slice(1)}</button>` : ''}
+                                <div class="select-all-label">
+                                    <input type="checkbox" id="${type}-select-all" onchange="toggleSelectAll('${type}', this.checked)" />
+                                    <span>Select All (${total})</span>
+                                </div>
+                            </div>
+                            ${selectAllHtml}
+                            <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width:40px;"></th>
+                                            <th style="width:40px;">#</th>
+                                            <th>${type === 'numbers' ? 'Number' : type === 'ranges' ? 'Range Name' : type === 'clients' ? 'Username' : 'Username'}</th>
+                                            ${typeof extraFields === 'function' ? '<th>Details</th>' : ''}
+                                            ${isManager ? '<th>Actions</th>' : ''}
+                                        </tr>
+                                    </thead>
+                                    <tbody>${rows || `<tr><td colspan="${isManager ? 5 : 4}" style="text-align:center; color:#64748b;">No ${type} available.</td></tr>`}</tbody>
+                                </table>
+                            </div>
+                        `;
+            };
+
+            switch (pageId) {
+                case 'dashboard': {
+                    const linkCards = `
+                                <div style="margin-top:8px;">
+                                    <h3 style="margin-bottom:12px; color:#0f172a;"><i class="fas fa-rocket"></i> Quick Access</h3>
+                                    <div class="link-card-grid">
+                                        <a href="#" onclick="loadPage('mySmsNumbers')" class="link-card">
+                                            <i class="fas fa-phone"></i>
+                                            <span class="card-title">Numbers</span>
+                                            <span class="card-desc">Manage SMS numbers</span>
+                                        </a>
+                                        <a href="#" onclick="loadPage('agents')" class="link-card orange">
+                                            <i class="fas fa-user-tie"></i>
+                                            <span class="card-title">Agents</span>
+                                            <span class="card-desc">Manage agents</span>
+                                        </a>
+                                        <a href="#" onclick="loadPage('chat')" class="link-card" style="border-color:#dc2626;">
+                                            <i class="fas fa-comments" style="color:#dc2626;"></i>
+                                            <span class="card-title">Chat</span>
+                                            <span class="card-desc">Agent messages</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            `;
+                    const isAgent = currentUser && currentUser.role === 'Agent';
+                    const isManager = currentUser && currentUser.role === 'Manager';
+                    const myNumbers = AppData.numbers.filter(n => n.assignedTo === currentUser?.username).length;
+                    const available = AppData.numbers.filter(n => n.status === 'Available' && !n.assignedTo && n
+                        .requestStatus !== 'pending').length;
+                    const pendingReq = AppData.numbers.filter(n => n.requestStatus === 'pending').length;
+
+                    let statsList = '';
+                    if (isAgent) {
+                        statsList = `
+                                    <li style="padding:6px 0;"><i class="fas fa-check-circle" style="color:#16a34a;"></i> Available: ${available}</li>
+                                    <li style="padding:6px 0;"><i class="fas fa-phone" style="color:#4f46e5;"></i> My Numbers: ${myNumbers}</li>
+                                    <li style="padding:6px 0;"><i class="fas fa-dollar-sign" style="color:#f59e0b;"></i> Payout: $0.009/SMS</li>
+                                `;
+                    } else if (isManager) {
+                        statsList = `
+                                    <li style="padding:6px 0;"><i class="fas fa-layer-group" style="color:#4f46e5;"></i> Ranges: ${AppData.ranges.length}</li>
+                                    <li style="padding:6px 0;"><i class="fas fa-hashtag" style="color:#16a34a;"></i> Numbers: ${AppData.numbers.length}</li>
+                                    <li style="padding:6px 0;"><i class="fas fa-user-tie" style="color:#f59e0b;"></i> Agents: ${AppData.agents.length}</li>
+                                    <li style="padding:6px 0;"><i class="fas fa-users" style="color:#3b82f6;"></i> Clients: ${AppData.clients.length}</li>
+                                    <li style="padding:6px 0;"><i class="fas fa-clock" style="color:#dc2626;"></i> Pending: ${pendingReq}</li>
+                                `;
+                    } else {
+                        statsList = `
+                                    <li style="padding:6px 0;"><i class="fas fa-hashtag" style="color:#16a34a;"></i> Total Numbers: ${AppData.numbers.length}</li>
+                                    <li style="padding:6px 0;"><i class="fas fa-check-circle" style="color:#16a34a;"></i> Available: ${AppData.numbers.filter(n => n.status === 'Available' && !n.assignedTo).length}</li>
+                                `;
+                    }
+
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-tachometer-alt"></i> Dashboard</h3>
+                                    <p style="margin-bottom:12px;">Your activity summary:</p>
+                                    <ul style="list-style:none;padding:0;color:#0f172a;">
+                                        ${statsList}
+                                    </ul>
+                                    ${linkCards}
+                                </div>
+                            `;
+                    const warning = document.getElementById('managerWarning');
+                    if (AppData.numbers.length === 0 && currentUser && currentUser.role === 'Manager') {
+                        warning.style.display = 'flex';
+                    } else {
+                        warning.style.display = 'none';
+                    }
+                    break;
+                }
+
+                case 'smsRanges': {
+                    const ranges = AppData.ranges;
+                    const isManager = currentUser && currentUser.role === 'Manager';
+                    let rows = ranges.map((r, idx) => `
+                                <tr class="${selectedItems.ranges?.includes(r.id) ? 'selected-row' : ''}">
+                                    <td><div class="checkbox-wrapper"><input type="checkbox" name="range-select" data-id="${r.id}" onchange="updateSelectionCount('ranges')" /></div></td>
+                                    <td>${idx + 1}</td>
+                                    <td><strong>${r.name}</strong></td>
+                                    <td>${r.country} | ${r.prefix}</td>
+                                    <td><span class="badge ${r.status === 'Active' ? 'badge-success' : 'badge-danger'}">${r.status}</span></td>
+                                    <td>${r.count} numbers</td>
+                                    <td>$${r.payout} | ${r.payterm}</td>
+                                    ${isManager ? `<td>
+                                        <button class="btn-warning" style="padding:2px 12px; font-size:11px;" onclick="editRange(${r.id})"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-danger" style="padding:2px 12px; font-size:11px;" onclick="deleteRange(${r.id})"><i class="fas fa-trash-alt"></i></button>
+                                    </td>` : ''}
+                                </tr>
+                            `).join('');
+
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-layer-group"></i> SMS Ranges</h3>
+                                    <div class="action-bar">
+                                        ${isManager ? `<button class="btn-success" onclick="addRange()"><i class="fas fa-plus"></i> Add Range</button>` : ''}
+                                        <div class="select-all-label">
+                                            <input type="checkbox" id="ranges-select-all" onchange="toggleSelectAll('ranges', this.checked)" />
+                                            <span>Select All (${ranges.length})</span>
+                                        </div>
+                                    </div>
+                                    <div class="bulk-actions-bar" id="ranges-bulk-actions" style="display:none;">
+                                        <span class="count">Selected: <strong id="ranges-count">0</strong></span>
+                                        <button class="btn-danger" onclick="bulkDeleteSelected('ranges')"><i class="fas fa-trash-alt"></i> Delete Selected</button>
+                                        <button class="btn-outline" onclick="toggleSelectAll('ranges', false)">Clear</button>
+                                    </div>
+                                    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                                        <table>
+                                            <thead><tr><th style="width:40px;"></th><th style="width:40px;">#</th><th>Name</th><th>Country</th><th>Status</th><th>Count</th><th>Payout</th>${isManager ? '<th>Actions</th>' : ''}</tr></thead>
+                                            <tbody>${rows || `<tr><td colspan="${isManager ? 8 : 7}" style="text-align:center; color:#64748b;">No ranges available.</td></tr>`}</tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'mySmsNumbers': {
+                    const isAgent = currentUser && currentUser.role === 'Agent';
+                    const isManager = currentUser && currentUser.role === 'Manager';
+                    let filtered = AppData.numbers;
+                    if (isAgent) filtered = AppData.numbers.filter(n => n.assignedTo === currentUser.username);
+                    else if (!isManager) filtered = AppData.numbers.filter(n => n.assignedTo === currentUser.username);
+
+                    let rows = filtered.map((n, idx) => `
+                                <tr class="${selectedItems.numbers?.includes(n.id) ? 'selected-row' : ''}">
+                                    <td><div class="checkbox-wrapper"><input type="checkbox" name="num-select" data-id="${n.id}" onchange="updateSelectionCount('numbers')" /></div></td>
+                                    <td>${idx + 1}</td>
+                                    <td><strong>${n.number}</strong></td>
+                                    <td>${n.range || '—'}</td>
+                                    <td><span class="badge ${n.status === 'Available' ? 'badge-available' : n.status === 'Assigned' ? 'badge-assigned' : 'badge-danger'}">${n.status}</span></td>
+                                    <td>${n.assignedTo || 'Unassigned'}</td>
+                                    <td>$${n.payout || '0.009'}</td>
+                                    ${isManager ? `<td><button class="remove-btn" onclick="removeNumber(${n.id})"><i class="fas fa-trash-alt"></i></button></td>` : ''}
+                                </tr>
+                            `).join('');
+
+                    const uploadBtn = isManager ? `
+                                <button class="btn-warning" onclick="uploadNumbersFile()"><i class="fas fa-upload"></i> Upload</button>
+                            ` : '';
+                    const addBtn = isManager ? `
+                                <button class="btn-success" onclick="addNumber()"><i class="fas fa-plus"></i> Add</button>
+                                <button class="btn-danger" onclick="removeAllNumbers()"><i class="fas fa-trash-alt"></i> Remove All</button>
+                            ` : '';
+
+                    const total = filtered.length;
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-phone"></i> ${isAgent ? 'My Numbers' : 'SMS Numbers'}</h3>
+                                    <div class="action-bar">
+                                        ${addBtn}
+                                        ${uploadBtn}
+                                        <div class="select-all-label">
+                                            <input type="checkbox" id="numbers-select-all" onchange="toggleSelectAll('numbers', this.checked)" />
+                                            <span>Select All (${total})</span>
+                                        </div>
+                                    </div>
+                                    <div class="bulk-actions-bar" id="numbers-bulk-actions" style="display:none;">
+                                        <span class="count">Selected: <strong id="numbers-count">0</strong></span>
+                                        <button class="btn-danger" onclick="bulkDeleteSelected('numbers')"><i class="fas fa-trash-alt"></i> Delete Selected</button>
+                                        <button class="btn-outline" onclick="toggleSelectAll('numbers', false)">Clear</button>
+                                    </div>
+                                    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                                        <table>
+                                            <thead><tr><th style="width:40px;"></th><th style="width:40px;">#</th><th>Number</th><th>Range</th><th>Status</th><th>Assigned To</th><th>Payout</th>${isManager ? '<th>Actions</th>' : ''}</tr></thead>
+                                            <tbody>${rows || `<tr><td colspan="${isManager ? 8 : 7}" style="text-align:center; color:#64748b;">No numbers.</td></tr>`}</tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'requestNumber': {
+                    const available = AppData.numbers.filter(n => n.status === 'Available' && !n.assignedTo && n
+                        .requestStatus !== 'pending');
+                    let rows = available.map(n => `
+                                <tr data-range="${n.range}" data-number="${n.number}">
+                                    <td>${n.range}</td>
+                                    <td><strong>${n.number}</strong></td>
+                                    <td>${n.payterm || 'Weekly'}</td>
+                                    <td>$${n.payout || '0.009'}</td>
+                                    <td>${n.limits || '—'}</td>
+                                    <td>
+                                        <button class="btn-request" onclick="requestNumber(${n.id})">
+                                            <i class="fas fa-hand-holding-heart"></i> Select
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('');
+
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-hand-holding-heart"></i> Request a Number</h3>
+                                    <div class="search-bar">
+                                        <label for="searchRN">Search:</label>
+                                        <input type="text" id="searchRN" placeholder="Range or number..." oninput="filterRequestTable()" />
+                                    </div>
+                                    <p style="margin-bottom:12px; color:#475569;">Available: <strong style="color:#0f172a;">${available.length}</strong></p>
+                                    <div class="request-table-wrap">
+                                        <table id="requestTable">
+                                            <thead><tr><th>Range</th><th>Number</th><th>Payterm</th><th>Payout</th><th>Limits</th><th>Action</th></tr></thead>
+                                            <tbody>${rows || '<tr><td colspan="6" style="text-align:center; color:#64748b;">No numbers available.</td></tr>'}</tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'pendingRequests': {
+                    if (currentUser.role !== 'Manager') {
+                        html = darkPlaceholder('You do not have permission to view this page.');
+                        break;
+                    }
+                    const pending = AppData.numbers.filter(n => n.requestStatus === 'pending');
+                    let rows = pending.map(n => `
+                                <tr>
+                                    <td>${n.number}</td>
+                                    <td>${n.range}</td>
+                                    <td>${n.requestedBy || n.assignedTo || 'N/A'}</td>
+                                    <td>$${n.payout}</td>
+                                    <td><span class="badge badge-pending">Pending</span></td>
+                                    <td>
+                                        <button class="btn-success" style="padding:2px 12px; font-size:11px;" onclick="approveRequest(${n.id})"><i class="fas fa-check"></i></button>
+                                        <button class="btn-danger" style="padding:2px 12px; font-size:11px;" onclick="rejectRequest(${n.id})"><i class="fas fa-times"></i></button>
+                                    </td>
+                                </tr>
+                            `).join('');
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-clock"></i> Pending Requests (${pending.length})</h3>
+                                    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                                        <table>
+                                            <thead><tr><th>Number</th><th>Range</th><th>Requested By</th><th>Payout</th><th>Status</th><th>Actions</th></tr></thead>
+                                            <tbody>${rows || '<tr><td colspan="6" style="text-align:center; color:#64748b;">No pending requests.</td></tr>'}</tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'agents': {
+                    const isManager = currentUser && currentUser.role === 'Manager';
+                    const agents = AppData.agents;
+                    let rows = agents.map((a, idx) => `
+                                <tr class="${selectedItems.agents?.includes(a.id) ? 'selected-row' : ''}">
+                                    <td><div class="checkbox-wrapper"><input type="checkbox" name="agent-select" data-id="${a.id}" onchange="updateSelectionCount('agents')" /></div></td>
+                                    <td>${idx + 1}</td>
+                                    <td><strong>${a.username}</strong></td>
+                                    <td>${a.email}</td>
+                                    <td>${a.number || '—'}</td>
+                                    <td><span class="badge ${a.status === 'Active' ? 'badge-success' : 'badge-danger'}">${a.status}</span></td>
+                                    ${isManager ? `<td>
+                                        <button class="btn-warning" style="padding:2px 12px; font-size:11px;" onclick="editAgent(${a.id})"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-danger" style="padding:2px 12px; font-size:11px;" onclick="deleteAgent(${a.id})"><i class="fas fa-trash-alt"></i></button>
+                                    </td>` : ''}
+                                </tr>
+                            `).join('');
+
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-user-tie"></i> Agents</h3>
+                                    <div class="action-bar">
+                                        ${isManager ? `<button class="btn-success" onclick="addAgent()"><i class="fas fa-plus"></i> Add Agent</button>` : ''}
+                                        <div class="select-all-label">
+                                            <input type="checkbox" id="agents-select-all" onchange="toggleSelectAll('agents', this.checked)" />
+                                            <span>Select All (${agents.length})</span>
+                                        </div>
+                                    </div>
+                                    <div class="bulk-actions-bar" id="agents-bulk-actions" style="display:none;">
+                                        <span class="count">Selected: <strong id="agents-count">0</strong></span>
+                                        <button class="btn-danger" onclick="bulkDeleteSelected('agents')"><i class="fas fa-trash-alt"></i> Delete Selected</button>
+                                        <button class="btn-outline" onclick="toggleSelectAll('agents', false)">Clear</button>
+                                    </div>
+                                    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                                        <table>
+                                            <thead><tr><th style="width:40px;"></th><th style="width:40px;">#</th><th>Username</th><th>Email</th><th>Number</th><th>Status</th>${isManager ? '<th>Actions</th>' : ''}</tr></thead>
+                                            <tbody>${rows || `<tr><td colspan="${isManager ? 7 : 6}" style="text-align:center; color:#64748b;">No agents.</td></tr>`}</tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'clients': {
+                    const isManager = currentUser && (currentUser.role === 'Manager' || currentUser.role === 'Administrator');
+                    const clients = AppData.clients;
+                    let rows = clients.map((c, idx) => `
+                                <tr class="${selectedItems.clients?.includes(c.id) ? 'selected-row' : ''}">
+                                    <td><div class="checkbox-wrapper"><input type="checkbox" name="client-select" data-id="${c.id}" onchange="updateSelectionCount('clients')" /></div></td>
+                                    <td>${idx + 1}</td>
+                                    <td><strong>${c.username}</strong></td>
+                                    <td>${c.email}</td>
+                                    <td>${c.number || '—'}</td>
+                                    <td>${c.country || '—'}</td>
+                                    <td><span class="badge ${c.status === 'Active' ? 'badge-success' : 'badge-danger'}">${c.status}</span></td>
+                                    ${isManager ? `<td>
+                                        <button class="btn-warning" style="padding:2px 12px; font-size:11px;" onclick="editClient(${c.id})"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-danger" style="padding:2px 12px; font-size:11px;" onclick="deleteClient(${c.id})"><i class="fas fa-trash-alt"></i></button>
+                                    </td>` : ''}
+                                </tr>
+                            `).join('');
+
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-users"></i> Clients</h3>
+                                    <div class="action-bar">
+                                        ${isManager ? `<button class="btn-success" onclick="addClient()"><i class="fas fa-plus"></i> Add Client</button>` : ''}
+                                        <div class="select-all-label">
+                                            <input type="checkbox" id="clients-select-all" onchange="toggleSelectAll('clients', this.checked)" />
+                                            <span>Select All (${clients.length})</span>
+                                        </div>
+                                    </div>
+                                    <div class="bulk-actions-bar" id="clients-bulk-actions" style="display:none;">
+                                        <span class="count">Selected: <strong id="clients-count">0</strong></span>
+                                        <button class="btn-danger" onclick="bulkDeleteSelected('clients')"><i class="fas fa-trash-alt"></i> Delete Selected</button>
+                                        <button class="btn-outline" onclick="toggleSelectAll('clients', false)">Clear</button>
+                                    </div>
+                                    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                                        <table>
+                                            <thead><tr><th style="width:40px;"></th><th style="width:40px;">#</th><th>Username</th><th>Email</th><th>Number</th><th>Country</th><th>Status</th>${isManager ? '<th>Actions</th>' : ''}</tr></thead>
+                                            <tbody>${rows || `<tr><td colspan="${isManager ? 8 : 7}" style="text-align:center; color:#64748b;">No clients.</td></tr>`}</tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'chat': {
+                    if (currentUser.role !== 'Manager') {
+                        html = darkPlaceholder('Only managers can view agent chats.');
+                        break;
+                    }
+                    const messages = AppData.chatMessages || [];
+                    const agentNames = [...new Set(messages.filter(m => m.sender === 'agent').map(m => m.agentName))];
+                    const allAgents = [...agentNames, ...AppData.agents.map(a => a.username)];
+                    const uniqueAgents = [...new Set(allAgents)].filter(Boolean);
+
+                    let chatHTML = messages.map(m => {
+                        const isManager = m.sender === 'manager';
+                        const isAgent = m.sender === 'agent';
+                        const isSystem = m.sender === 'system';
+                        const time = new Date(m.timestamp).toLocaleTimeString('en-US', { hour: '2-digit',
+                            minute: '2-digit' });
+                        if (isSystem) {
+                            return `<div class="chat-message system-msg">${m.text} <span class="chat-time">${time}</span></div>`;
+                        }
+                        const cls = isManager ? 'manager-msg' : 'agent-msg';
+                        const senderName = isManager ? '👑 Manager' : (m.agentName || 'Agent');
+                        return `
+                                    <div class="chat-message ${cls}">
+                                        <div class="chat-sender">${senderName}</div>
+                                        ${m.text}
+                                        <span class="chat-time">${time}</span>
+                                    </div>
+                                `;
+                    }).join('');
+
+                    const agentChips = uniqueAgents.map(a => `
+                                <span class="chat-agent-chip" data-agent="${a}" onclick="filterChat('${a}')">${a}</span>
+                            `).join('');
+
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-comments" style="color:#dc2626;"></i> Agent Chat <span class="live-badge">● LIVE</span></h3>
+                                    <p style="margin-bottom:12px; color:#475569;">Manager messages appear in <span style="color:#dc2626;font-weight:600;">RED</span> · Agent messages in <span style="color:#0f172a;font-weight:600;">WHITE</span></p>
+                                    <div class="chat-agent-selector">
+                                        <span class="chat-agent-chip manager-chip active" onclick="filterChat('all')">📢 All</span>
+                                        ${agentChips}
+                                    </div>
+                                    <div class="chat-messages-list" id="chatMessagesList">
+                                        ${chatHTML || '<div class="empty-dark"><i class="fas fa-comment-slash"></i><p>No messages yet.</p></div>'}
+                                    </div>
+                                    <div class="chat-input-area">
+                                        <select id="chatAgentSelect">
+                                            <option value="all">All Agents</option>
+                                            ${uniqueAgents.map(a => `<option value="${a}">${a}</option>`).join('')}
+                                        </select>
+                                        <input type="text" id="chatInput" placeholder="Type your reply..." />
+                                        <button class="btn-danger" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i> Reply</button>
+                                    </div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'managers': {
+                    if (currentUser.source !== 'root_manager') {
+                        html = darkPlaceholder('You do not have permission.');
+                        break;
+                    }
+                    let mgrHTML = AppData.managers.map(m => `
+                                <tr>
+                                    <td>${m.username}</td>
+                                    <td>${m.email}</td>
+                                    <td>${m.number || '—'}</td>
+                                    <td><span class="badge ${m.status === 'Active' ? 'badge-success' : 'badge-danger'}">${m.status}</span></td>
+                                    <td>
+                                        <button class="btn-warning" style="padding:2px 12px; font-size:11px;" onclick="editManager(${m.id})"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-danger" style="padding:2px 12px; font-size:11px;" onclick="deleteManager(${m.id})"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            `).join('');
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-user-shield"></i> Managers (Root Only)</h3>
+                                    <div class="action-bar">
+                                        <button class="btn-success" onclick="addManager()"><i class="fas fa-plus"></i> Add Manager</button>
+                                    </div>
+                                    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                                        <table>
+                                            <thead><tr><th>Username</th><th>Email</th><th>Number</th><th>Status</th><th>Actions</th></tr></thead>
+                                            <tbody>${mgrHTML || '<tr><td colspan="5" style="text-align:center; color:#64748b;">No managers.</td></tr>'}</tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'news': {
+                    let newsHTML = AppData.news.map(n => `
+                                <div class="range-item">
+                                    <div>
+                                        <strong style="color:#0f172a;">${n.title}</strong>
+                                        <span style="font-size:13px; color:#475569; display:block;">${n.date} — ${n.content}</span>
+                                    </div>
+                                </div>
+                            `).join('');
+                    const canAdd = currentUser && (currentUser.role === 'Manager' || currentUser.role === 'Administrator');
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-newspaper"></i> News</h3>
+                                    ${canAdd ? `<div class="action-bar"><button class="btn-success" onclick="addNews()"><i class="fas fa-plus"></i> Add News</button></div>` : ''}
+                                    ${newsHTML || darkPlaceholder('No news updates.')}
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'cdrStats': {
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-chart-bar"></i> Live Report <span class="live-badge">● LIVE</span></h3>
+                                    <p style="margin-bottom:12px; color:#475569;">Simulated CDR data — refreshes every 5s</p>
+                                    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                                        <table class="report-live">
+                                            <thead><tr><th>SMS</th><th>Range</th><th>Number</th><th>CLI</th><th>Time</th></tr></thead>
+                                            <tbody id="report-body"><tr><td colspan="5" style="text-align:center; color:#64748b;">Loading...</td></tr></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="report-refresh"><i class="fas fa-sync-alt fa-spin"></i> Auto-refresh 5s</div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'creditNotes': {
+                    let cnHTML = AppData.creditNotes.map(c => `
+                                <tr><td>${c.client}</td><td>${c.amount}</td><td>${c.currency}</td><td>${c.date}</td><td>${c.note || ''}</td></tr>
+                            `).join('');
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-file-invoice"></i> Credit Notes</h3>
+                                    <div class="action-bar"><button class="btn-success" onclick="addCreditNote()"><i class="fas fa-plus"></i> New</button></div>
+                                    <div style="overflow-x:auto;"><table><thead><tr><th>Client</th><th>Amount</th><th>Currency</th><th>Date</th><th>Note</th></tr></thead><tbody>${cnHTML || '<tr><td colspan="5" style="text-align:center; color:#64748b;">No credit notes.</td></tr>'}</tbody></table></div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'paymentRequests': {
+                    let prHTML = AppData.paymentRequests.map(p => `
+                                <tr>
+                                    <td>${p.client}</td><td>${p.amount}</td><td>${p.currency}</td><td>${p.date}</td>
+                                    <td><span class="badge ${p.status === 'Approved' ? 'badge-success' : p.status === 'Rejected' ? 'badge-danger' : 'badge-warning'}">${p.status}</span></td>
+                                    <td><button class="btn-warning" style="padding:2px 12px; font-size:11px;" onclick="editPaymentRequest(${p.id})"><i class="fas fa-edit"></i></button></td>
+                                </tr>
+                            `).join('');
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-hand-holding-usd"></i> Payment Requests</h3>
+                                    <div class="action-bar"><button class="btn-success" onclick="addPaymentRequest()"><i class="fas fa-plus"></i> New</button></div>
+                                    <div style="overflow-x:auto;"><table><thead><tr><th>Client</th><th>Amount</th><th>Currency</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>${prHTML || '<tr><td colspan="6" style="text-align:center; color:#64748b;">No payment requests.</td></tr>'}</tbody></table></div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'bankAccounts': {
+                    let baHTML = AppData.bankAccounts.map(b => `
+                                <tr><td>${b.bank}</td><td>${b.account}</td><td>${b.currency}</td><td>${b.owner}</td>
+                                <td><button class="btn-warning" style="padding:2px 12px; font-size:11px;" onclick="editBankAccount(${b.id})"><i class="fas fa-edit"></i></button></td></tr>
+                            `).join('');
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-university"></i> Bank Accounts</h3>
+                                    <div class="action-bar"><button class="btn-success" onclick="addBankAccount()"><i class="fas fa-plus"></i> Add</button></div>
+                                    <div style="overflow-x:auto;"><table><thead><tr><th>Bank</th><th>Account</th><th>Currency</th><th>Owner</th><th>Actions</th></tr></thead><tbody>${baHTML || '<tr><td colspan="5" style="text-align:center; color:#64748b;">No bank accounts.</td></tr>'}</tbody></table></div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'usdStatements': {
+                    const key = 'usd';
+                    const stmts = AppData.statements[key] || [];
+                    let rows = stmts.map(s => `<tr><td>${s.date}</td><td>${s.description}</td><td>${s.amount}</td><td>${s.balance}</td></tr>`)
+                        .join('');
+                    let totalIn = 0,
+                        totalOut = 0;
+                    stmts.forEach(s => { const a = parseFloat(s.amount); if (!isNaN(a)) { if (a >= 0) totalIn += a;
+                            else totalOut += Math.abs(a); } });
+                    const balance = stmts.length > 0 ? parseFloat(stmts[stmts.length - 1].balance) : 0;
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-dollar-sign"></i> USD Statements</h3>
+                                    <div class="payment-details-grid">
+                                        <div class="payment-detail-card"><div class="label">Daily</div><div class="amount"><span class="currency">$</span>5</div></div>
+                                        <div class="payment-detail-card"><div class="label">Weekly</div><div class="amount"><span class="currency">$</span>5</div></div>
+                                        <div class="payment-detail-card"><div class="label">Monthly</div><div class="amount"><span class="currency">$</span>20</div></div>
+                                    </div>
+                                    <div class="stmt-summary">
+                                        <div class="stmt-summary-item">Balance: <span>$${balance.toFixed(2)}</span></div>
+                                        <div class="stmt-summary-item">In: <span>$${totalIn.toFixed(2)}</span></div>
+                                        <div class="stmt-summary-item">Out: <span>$${totalOut.toFixed(2)}</span></div>
+                                    </div>
+                                    <div class="action-bar">
+                                        <button class="btn-primary" onclick="generateStatement('USD')"><i class="fas fa-plus"></i> Generate</button>
+                                        <button class="btn-success" onclick="exportStatement('USD')"><i class="fas fa-download"></i> Export CSV</button>
+                                    </div>
+                                    <div style="overflow-x:auto;"><table><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Balance</th></tr></thead><tbody>${rows || '<tr><td colspan="4" style="text-align:center; color:#64748b;">No statements.</td></tr>'}</tbody></table></div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'eurStatements': {
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fas fa-euro-sign"></i> Minimum Payment</h3>
+                                    <div style="background:#f8fafc; padding:24px; border-radius:16px; text-align:center; border:1px solid #e2e8f0; margin-top:12px;">
+                                        <p style="font-size:20px; font-weight:700; color:#0f172a;">Minimum: <span style="color:#4f46e5;">$10.00</span></p>
+                                        <p style="font-size:14px; color:#475569;">Adjust as needed</p>
+                                    </div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                case 'gbpStatements': {
+                    const url = 'https://whatsapp.com/channel/0029Vb96tbK2phHHNyGRny33';
+                    html = `
+                                <div class="data-table">
+                                    <h3><i class="fab fa-whatsapp"></i> Channel</h3>
+                                    <div class="channel-box">
+                                        <div class="channel-icon"><i class="fab fa-whatsapp"></i></div>
+                                        <p><strong style="color:#0f172a;">Follow Lamex SMS OFFICIAL</strong><br><a href="${url}" target="_blank" style="color:#4f46e5;">${url}</a></p>
+                                        <button class="btn-whatsapp" onclick="window.open('${url}','_blank')"><i class="fab fa-whatsapp"></i> Open</button>
+                                    </div>
+                                </div>
+                            `;
+                    break;
+                }
+
+                default:
+                    html = darkPlaceholder('Select a menu option.');
+            }
+
+            contentDiv.innerHTML = html;
+            renderStats();
+
+            // Init selection counts
+            ['numbers', 'ranges', 'clients', 'agents'].forEach(t => updateSelectionCount(t));
+
+            // CDR report
+            if (pageId === 'cdrStats') {
+                updateReportMock();
+                if (window._reportInterval) clearInterval(window._reportInterval);
+                window._reportInterval = setInterval(updateReportMock, 5000);
+            } else {
+                if (window._reportInterval) { clearInterval(window._reportInterval);
+                    window._reportInterval = null; }
+            }
+        }
+
+        // ─── MOCK LIVE REPORT ──────────────────────────────────────────
+
+        function updateReportMock() {
+            const tbody = document.getElementById('report-body');
+            if (!tbody) return;
+            const ranges = ['ALGERIA-SD52', 'ALGERIA-SD20', 'EGYPT-SD10', 'TUNISIA-SD5'];
+            const clis = ['+213661234567', '+213669876543', '+213655112233', '+213677445566'];
+            const nums = ['213659684693', '213665295582', '213668131428', '213662579271', '213670834776'];
+            const count = Math.floor(Math.random() * 8) + 5;
+            let rows = '';
+            for (let i = 0; i < count; i++) {
+                const sms = Math.floor(Math.random() * 99) + 1;
+                const range = ranges[Math.floor(Math.random() * ranges.length)];
+                const number = nums[Math.floor(Math.random() * nums.length)];
+                const cli = clis[Math.floor(Math.random() * clis.length)];
+                const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+                rows += `<tr><td>${sms}</td><td>${range}</td><td>${number}</td><td>${cli}</td><td>${time}</td></tr>`;
+            }
+            tbody.innerHTML = rows || `<tr><td colspan="5" style="text-align:center; color:#64748b;">No data.</td></tr>`;
+        }
+
+        // ─── SEARCH FILTER ─────────────────────────────────────────────
+
+        function filterRequestTable() {
+            const input = document.getElementById('searchRN');
+            if (!input) return;
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('requestTable');
+            if (!table) return;
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const range = row.getAttribute('data-range') || '';
+                const number = row.getAttribute('data-number') || '';
+                row.style.display = (range + number).toLowerCase().includes(filter) ? '' : 'none';
+            });
+        }
+
+        // ─── CHAT FUNCTIONS ────────────────────────────────────────────
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const select = document.getElementById('chatAgentSelect');
+            if (!input || !input.value.trim()) return;
+            const text = input.value.trim();
+            const agentTarget = select ? select.value : 'all';
+
+            if (!AppData.chatMessages) AppData.chatMessages = [];
+            if (!AppData.chatIdCounter) AppData.chatIdCounter = 100;
+
+            AppData.chatMessages.push({
+                id: AppData.chatIdCounter++,
+                sender: 'manager',
+                text: text,
+                timestamp: Date.now(),
+                agentName: currentUser?.name || 'Manager',
+                target: agentTarget
+            });
+
+            // Simulate agent reply (auto-response for demo)
+            setTimeout(() => {
+                const agents = AppData.agents.filter(a => a.status === 'Active');
+                if (agents.length > 0) {
+                    const randomAgent = agents[Math.floor(Math.random() * agents.length)];
+                    const replies = [
+                        'Got it, thank you!',
+                        'I will check that right away.',
+                        'Thanks for the update.',
+                        'Understood, manager.',
+                        'Appreciate your response!'
+                    ];
+                    AppData.chatMessages.push({
+                        id: AppData.chatIdCounter++,
+                        sender: 'agent',
+                        text: replies[Math.floor(Math.random() * replies.length)],
+                        timestamp: Date.now(),
+                        agentName: randomAgent.username,
+                        target: 'all'
+                    });
+                    syncData();
+                    if (document.querySelector('.nav-item.active')?.getAttribute('data-page') === 'chat') {
+                        loadPage('chat');
+                    }
+                }
+            }, 1500 + Math.random() * 2000);
+
+            syncData();
+            input.value = '';
+            if (document.querySelector('.nav-item.active')?.getAttribute('data-page') === 'chat') {
+                loadPage('chat');
+            }
+        }
+
+        function filterChat(agent) {
+            const chips = document.querySelectorAll('.chat-agent-chip');
+            chips.forEach(c => c.classList.remove('active'));
+            chips.forEach(c => {
+                if (c.getAttribute('data-agent') === agent) c.classList.add('active');
+                if (agent === 'all' && c.classList.contains('manager-chip')) c.classList.add('active');
+            });
+            // Filter messages
+            const container = document.getElementById('chatMessagesList');
+            if (!container) return;
+            const messages = container.querySelectorAll('.chat-message');
+            messages.forEach(m => {
+                const sender = m.querySelector('.chat-sender')?.textContent || '';
+                if (agent === 'all') {
+                    m.style.display = '';
+                } else {
+                    m.style.display = sender.includes(agent) || sender.includes('Manager') ? '' : 'none';
+                }
+            });
+        }
+
+        // ─── UPLOAD FILE ──────────────────────────────────────────────
+
+        function uploadNumbersFile() {
+            if (currentUser.role !== 'Manager') { alert('Only managers can upload files.'); return; }
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json,.csv,.txt';
+            input.onchange = function(e) {
+                if (this.files && this.files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        try {
+                            const content = ev.target.result;
+                            let imported = [];
+                            try {
+                                const parsed = JSON.parse(content);
+                                if (Array.isArray(parsed)) imported = parsed;
+                                else throw new Error('Not array');
+                            } catch (jsonErr) {
+                                const lines = content.split('\n').filter(l => l.trim());
+                                lines.forEach(line => {
+                                    const parts = line.split(',').map(p => p.trim());
+                                    if (parts.length >= 1 && parts[0]) {
+                                        imported.push({ number: parts[0], range: parts[1] || 'Unknown',
+                                            payterm: parts[2] || 'Weekly', payout: parts[3] || '0.009',
+                                            limits: parts[4] || '—' });
+                                    }
+                                });
+                            }
+                            if (imported.length === 0) { alert('No valid data.'); return; }
+                            let added = 0;
+                            imported.forEach(item => {
+                                if (item.number) {
+                                    AppData.numbers.push({
+                                        id: getNextId(),
+                                        number: item.number.trim(),
+                                        range: item.range || 'Unknown',
+                                        status: 'Available',
+                                        assignedTo: null,
+                                        payterm: item.payterm || 'Weekly',
+                                        payout: item.payout || '0.009',
+                                        limits: item.limits || '—',
+                                        requestStatus: null,
+                                        requestedBy: null
+                                    });
+                                    added++;
+                                }
+                            });
+                            syncData();
+                            loadPage('mySmsNumbers');
+                            renderStats();
+                            alert(`✅ Uploaded ${added} numbers.`);
+                        } catch (err) { alert('Error: ' + err.message); }
+                    };
+                    reader.readAsText(this.files[0]);
+                }
+            };
+            input.click();
+        }
+
+        // ─── REQUEST NUMBER ────────────────────────────────────────────
+
+        function requestNumber(id) {
+            if (!currentUser) { alert('Please log in.'); return; }
+            const allowed = ['Manager', 'Administrator', 'Agent'];
+            if (!allowed.includes(currentUser.role)) { alert('Permission denied.'); return; }
+            const num = AppData.numbers.find(n => n.id === id);
+            if (!num) { alert('Not found.'); return; }
+            if (num.status !== 'Available' || num.assignedTo) { alert('Not available.'); return; }
+            if (num.requestStatus === 'pending') { alert('Already requested.'); return; }
+            if (!confirm(`Request ${num.number}?`)) return;
+
+            if (currentUser.role === 'Manager' || currentUser.role === 'Administrator') {
+                num.status = 'Assigned';
+                num.assignedTo = currentUser.username;
+                num.requestStatus = 'approved';
+                num.requestedBy = currentUser.username;
+                syncData();
+                loadPage('requestNumber');
+                renderStats();
+                alert(`✅ ${num.number} assigned to you.`);
+            } else {
+                num.requestStatus = 'pending';
+                num.assignedTo = currentUser.username;
+                num.requestedBy = currentUser.username;
+                syncData();
+                loadPage('requestNumber');
+                renderStats();
+                alert(`✅ Request sent to manager.`);
+            }
+        }
+
+        // ─── APPROVE / REJECT ──────────────────────────────────────────
+
+        function approveRequest(id) {
+            if (currentUser.role !== 'Manager') { alert('Only managers can approve.'); return; }
+            const num = AppData.numbers.find(n => n.id === id);
+            if (!num) return;
+            if (num.requestStatus !== 'pending') { alert('Not pending.'); return; }
+            num.status = 'Assigned';
+            num.requestStatus = 'approved';
+            syncData();
+            loadPage('pendingRequests');
+            renderStats();
+            alert(`✅ ${num.number} assigned to ${num.assignedTo}.`);
+        }
+
+        function rejectRequest(id) {
+            if (currentUser.role !== 'Manager') { alert('Only managers can reject.'); return; }
+            const num = AppData.numbers.find(n => n.id === id);
+            if (!num) return;
+            if (num.requestStatus !== 'pending') { alert('Not pending.'); return; }
+            if (!confirm(`Reject ${num.number}?`)) return;
+            num.status = 'Available';
+            num.requestStatus = 'rejected';
+            num.assignedTo = null;
+            num.requestedBy = null;
+            syncData();
+            loadPage('pendingRequests');
+            renderStats();
+            alert(`❌ ${num.number} rejected.`);
+        }
+
+        // ─── CRUD: Ranges ─────────────────────────────────────────────
+
+        function addRange() {
+            showModal('Add SMS Range', `
+                        <input type="text" id="rangeName" placeholder="Range Name (e.g., ALGERIA-SD52)">
+                        <input type="text" id="rangeCountry" placeholder="Country">
+                        <input type="text" id="rangePrefix" placeholder="Prefix (e.g., 213)">
+                        <select id="rangeStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option></select>
+                        <input type="number" id="rangeCount" placeholder="Count" value="0">
+                        <input type="text" id="rangePayterm" placeholder="Payterm" value="Weekly">
+                        <input type="text" id="rangePayout" placeholder="Payout" value="0.009">
+                        <input type="text" id="rangeLimits" placeholder="Limits" value="SD:52">
+                    `, function() {
+                const name = document.getElementById('rangeName').value.trim();
+                const country = document.getElementById('rangeCountry').value.trim();
+                const prefix = document.getElementById('rangePrefix').value.trim();
+                const status = document.getElementById('rangeStatus').value;
+                const count = parseInt(document.getElementById('rangeCount').value) || 0;
+                const payterm = document.getElementById('rangePayterm').value.trim() || 'Weekly';
+                const payout = document.getElementById('rangePayout').value.trim() || '0.009';
+                const limits = document.getElementById('rangeLimits').value.trim() || 'SD:52';
+                if (!name || !country) { alert('Name and country required.'); return; }
+                AppData.ranges.push({ id: getNextId(), name, country, prefix, status, count, payterm, payout, limits });
+                syncData();
+                loadPage('smsRanges');
+            });
+        }
+
+        function editRange(id) {
+            const r = AppData.ranges.find(x => x.id === id);
+            if (!r) return;
+            showModal('Edit Range', `
+                        <input type="text" id="rangeName" value="${r.name}">
+                        <input type="text" id="rangeCountry" value="${r.country}">
+                        <input type="text" id="rangePrefix" value="${r.prefix}">
+                        <select id="rangeStatus"><option value="Active" ${r.status==='Active'?'selected':''}>Active</option><option value="Inactive" ${r.status==='Inactive'?'selected':''}>Inactive</option></select>
+                        <input type="number" id="rangeCount" value="${r.count}">
+                        <input type="text" id="rangePayterm" value="${r.payterm||'Weekly'}">
+                        <input type="text" id="rangePayout" value="${r.payout||'0.009'}">
+                        <input type="text" id="rangeLimits" value="${r.limits||'SD:52'}">
+                    `, function() {
+                r.name = document.getElementById('rangeName').value.trim() || r.name;
+                r.country = document.getElementById('rangeCountry').value.trim() || r.country;
+                r.prefix = document.getElementById('rangePrefix').value.trim() || r.prefix;
+                r.status = document.getElementById('rangeStatus').value;
+                r.count = parseInt(document.getElementById('rangeCount').value) || 0;
+                r.payterm = document.getElementById('rangePayterm').value.trim() || 'Weekly';
+                r.payout = document.getElementById('rangePayout').value.trim() || '0.009';
+                r.limits = document.getElementById('rangeLimits').value.trim() || 'SD:52';
+                syncData();
+                loadPage('smsRanges');
+            });
+        }
+
+        function deleteRange(id) {
+            if (!confirm('Delete this range?')) return;
+            AppData.ranges = AppData.ranges.filter(r => r.id !== id);
+            syncData();
+            loadPage('smsRanges');
+        }
+
+        // ─── CRUD: Numbers ────────────────────────────────────────────
+
+        function addNumber() {
+            const rangeOpts = AppData.ranges.map(r => `<option value="${r.name}">${r.name}</option>`).join('');
+            showModal('Add Number', `
+                        <input type="text" id="numVal" placeholder="Phone number">
+                        <select id="numRange">${rangeOpts||'<option>Unknown</option>'}</select>
+                        <select id="numStatus"><option value="Available">Available</option><option value="Assigned">Assigned</option></select>
+                        <input type="text" id="numPayterm" placeholder="Payterm" value="Weekly">
+                        <input type="text" id="numPayout" placeholder="Payout" value="0.009">
+                        <input type="text" id="numLimits" placeholder="Limits" value="SD:52">
+                        <input type="text" id="numAssigned" placeholder="Assigned to">
+                    `, function() {
+                const number = document.getElementById('numVal').value.trim();
+                const range = document.getElementById('numRange').value;
+                const status = document.getElementById('numStatus').value;
+                const payterm = document.getElementById('numPayterm').value.trim() || 'Weekly';
+                const payout = document.getElementById('numPayout').value.trim() || '0.009';
+                const limits = document.getElementById('numLimits').value.trim() || 'SD:52';
+                const assigned = document.getElementById('numAssigned').value.trim() || null;
+                if (!number) { alert('Number required.'); return; }
+                AppData.numbers.push({ id: getNextId(), number, range, status, payterm, payout, limits, assignedTo: assigned,
+                    requestStatus: null, requestedBy: null });
+                syncData();
+                loadPage('mySmsNumbers');
+            });
+        }
+
+        function removeNumber(id) {
+            if (!confirm('Remove this number?')) return;
+            AppData.numbers = AppData.numbers.filter(n => n.id !== id);
+            syncData();
+            loadPage('mySmsNumbers');
+            renderStats();
+        }
+
+        function removeAllNumbers() {
+            if (!confirm('⚠️ Remove ALL numbers?')) return;
+            AppData.numbers = [];
+            syncData();
+            loadPage('mySmsNumbers');
+            renderStats();
+        }
+
+        // ─── CRUD: Clients ────────────────────────────────────────────
+
+        function addClient() {
+            showModal('Add Client', `
+                        <input type="text" id="cu" placeholder="Username">
+                        <input type="password" id="cp" placeholder="Password">
+                        <input type="email" id="ce" placeholder="Email">
+                        <input type="text" id="cn" placeholder="Phone">
+                        <input type="text" id="cc" placeholder="Country">
+                    `, function() {
+                const u = document.getElementById('cu').value.trim(),
+                    p = document.getElementById('cp').value,
+                    e = document.getElementById('ce').value.trim();
+                const num = document.getElementById('cn').value.trim(),
+                    c = document.getElementById('cc').value.trim();
+                if (!u || !p || !e) { alert('Username, password, email required.'); return; }
+                if (AppData.clients.some(x => x.username === u) || AppData.agents.some(x => x.username === u) ||
+                    AppData.managers.some(x => x.username === u) || u === ROOT_MANAGER_USER.username) {
+                    alert('Username taken.'); return;
+                }
+                AppData.clients.push({ id: getNextId(), username: u, password: p, email: e, number: num || '',
+                    country: c || '', role: 'Client', status: 'Active' });
+                syncData();
+                loadPage('clients');
+                alert('Client added.');
+            });
+        }
+
+        function editClient(id) {
+            const c = AppData.clients.find(x => x.id === id);
+            if (!c) return;
+            showModal('Edit Client', `
+                        <input type="text" id="cu" value="${c.username}">
+                        <input type="password" id="cp" placeholder="New password (leave blank)">
+                        <input type="email" id="ce" value="${c.email}">
+                        <input type="text" id="cn" value="${c.number||''}">
+                        <input type="text" id="cc" value="${c.country||''}">
+                        <select id="cs"><option value="Active" ${c.status==='Active'?'selected':''}>Active</option><option value="Inactive" ${c.status==='Inactive'?'selected':''}>Inactive</option></select>
+                    `, function() {
+                const u = document.getElementById('cu').value.trim(),
+                    p = document.getElementById('cp').value,
+                    e = document.getElementById('ce').value.trim();
+                const num = document.getElementById('cn').value.trim(),
+                    co = document.getElementById('cc').value.trim(),
+                    s = document.getElementById('cs').value;
+                if (!u || !e) { alert('Username and email required.'); return; }
+                if (AppData.clients.some(x => x.username === u && x.id !== id) || AppData.agents.some(x => x
+                        .username === u) || AppData.managers.some(x => x.username === u) ||
+                    u === ROOT_MANAGER_USER.username) { alert('Username taken.'); return; }
+                c.username = u;
+                if (p) c.password = p;
+                c.email = e;
+                c.number = num || '';
+                c.country = co || '';
+                c.status = s;
+                syncData();
+                loadPage('clients');
+                alert('Client updated.');
+            });
+        }
+
+        function deleteClient(id) {
+            if (!confirm('Delete client?')) return;
+            AppData.clients = AppData.clients.filter(x => x.id !== id);
+            syncData();
+            loadPage('clients');
+        }
+
+        // ─── CRUD: Agents ─────────────────────────────────────────────
+
+        function addAgent() {
+            if (currentUser.role !== 'Manager') { alert('Only managers can add agents.'); return; }
+            showModal('Add Agent', `
+                        <input type="text" id="au" placeholder="Username">
+                        <input type="password" id="ap" placeholder="Password">
+                        <input type="email" id="ae" placeholder="Email">
+                        <input type="text" id="an" placeholder="Phone">
+                        <input type="text" id="ac" placeholder="Country">
+                    `, function() {
+                const u = document.getElementById('au').value.trim(),
+                    p = document.getElementById('ap').value,
+                    e = document.getElementById('ae').value.trim();
+                const num = document.getElementById('an').value.trim(),
+                    c = document.getElementById('ac').value.trim();
+                if (!u || !p || !e) { alert('Username, password, email required.'); return; }
+                if (AppData.agents.some(x => x.username === u) || AppData.clients.some(x => x.username === u) ||
+                    AppData.managers.some(x => x.username === u) || u === ROOT_MANAGER_USER.username) {
+                    alert('Username taken.'); return;
+                }
+                AppData.agents.push({ id: getNextId(), username: u, password: p, email: e, number: num || '',
+                    country: c || '', role: 'Agent', status: 'Active' });
+                syncData();
+                loadPage('agents');
+                alert('Agent added.');
+            });
+        }
+
+        function editAgent(id) {
+            if (currentUser.role !== 'Manager') { alert('Only managers can edit agents.'); return; }
+            const a = AppData.agents.find(x => x.id === id);
+            if (!a) return;
+            showModal('Edit Agent', `
+                        <input type="text" id="au" value="${a.username}">
+                        <input type="password" id="ap" placeholder="New password (leave blank)">
+                        <input type="email" id="ae" value="${a.email}">
+                        <input type="text" id="an" value="${a.number||''}">
+                        <input type="text" id="ac" value="${a.country||''}">
+                        <select id="as"><option value="Active" ${a.status==='Active'?'selected':''}>Active</option><option value="Inactive" ${a.status==='Inactive'?'selected':''}>Inactive</option></select>
+                    `, function() {
+                const u = document.getElementById('au').value.trim(),
+                    p = document.getElementById('ap').value,
+                    e = document.getElementById('ae').value.trim();
+                const num = document.getElementById('an').value.trim(),
+                    co = document.getElementById('ac').value.trim(),
+                    s = document.getElementById('as').value;
+                if (!u || !e) { alert('Username and email required.'); return; }
+                if (AppData.agents.some(x => x.username === u && x.id !== id) || AppData.clients.some(x => x
+                        .username === u) || AppData.managers.some(x => x.username === u) ||
+                    u === ROOT_MANAGER_USER.username) { alert('Username taken.'); return; }
+                a.username = u;
+                if (p) a.password = p;
+                a.email = e;
+                a.number = num || '';
+                a.country = co || '';
+                a.status = s;
+                syncData();
+                loadPage('agents');
+                alert('Agent updated.');
+            });
+        }
+
+        function deleteAgent(id) {
+            if (currentUser.role !== 'Manager') { alert('Only managers can delete agents.'); return; }
+            if (!confirm('Delete agent?')) return;
+            const agent = AppData.agents.find(x => x.id === id);
+            AppData.agents = AppData.agents.filter(x => x.id !== id);
+            AppData.numbers.forEach(n => {
+                if (n.assignedTo === agent?.username) { n.assignedTo = null;
+                    n.status = 'Available';
+                    n.requestStatus = null;
+                    n.requestedBy = null; }
+            });
+            syncData();
+            loadPage('agents');
+            renderStats();
+        }
+
+        // ─── CRUD: News ───────────────────────────────────────────────
+
+        function addNews() {
+            showModal('Add News', `
+                        <input type="text" id="nt" placeholder="Title">
+                        <input type="date" id="nd" value="${new Date().toISOString().split('T')[0]}">
+                        <textarea id="nc" placeholder="Content" style="min-height:80px;"></textarea>
+                    `, function() {
+                const t = document.getElementById('nt').value.trim(),
+                    d = document.getElementById('nd').value,
+                    c = document.getElementById('nc').value.trim();
+                if (!t || !c) { alert('Title and content required.'); return; }
+                AppData.news.push({ id: getNextId(), title: t, date: d, content: c });
+                syncData();
+                loadPage('news');
+            });
+        }
+
+        // ─── CRUD: Credit Notes ───────────────────────────────────────
+
+        function addCreditNote() {
+            showModal('Credit Note', `
+                        <input type="text" id="cnc" placeholder="Client">
+                        <input type="number" id="cna" placeholder="Amount" step="0.01">
+                        <input type="text" id="cncu" placeholder="Currency" value="USD">
+                        <input type="date" id="cnd" value="${new Date().toISOString().split('T')[0]}">
+                        <input type="text" id="cnn" placeholder="Note">
+                    `, function() {
+                const cl = document.getElementById('cnc').value.trim(),
+                    am = document.getElementById('cna').value,
+                    cu = document.getElementById('cncu').value.trim() || 'USD';
+                const d = document.getElementById('cnd').value,
+                    n = document.getElementById('cnn').value.trim();
+                if (!cl || !am) { alert('Client and amount required.'); return; }
+                AppData.creditNotes.push({ id: getNextId(), client: cl, amount: am, currency: cu, date: d, note: n });
+                syncData();
+                loadPage('creditNotes');
+            });
+        }
+
+        // ─── CRUD: Payment Requests ───────────────────────────────────
+
+        function addPaymentRequest() {
+            showModal('Payment Request', `
+                        <input type="text" id="prc" placeholder="Client">
+                        <input type="number" id="pra" placeholder="Amount" step="0.01">
+                        <input type="text" id="prcu" placeholder="Currency" value="USD">
+                        <input type="date" id="prd" value="${new Date().toISOString().split('T')[0]}">
+                        <select id="prs"><option value="Pending">Pending</option><option value="Approved">Approved</option><option value="Rejected">Rejected</option></select>
+                    `, function() {
+                const cl = document.getElementById('prc').value.trim(),
+                    am = document.getElementById('pra').value,
+                    cu = document.getElementById('prcu').value.trim() || 'USD';
+                const d = document.getElementById('prd').value,
+                    s = document.getElementById('prs').value;
+                if (!cl || !am) { alert('Client and amount required.'); return; }
+                AppData.paymentRequests.push({ id: getNextId(), client: cl, amount: am, currency: cu, date: d,
+                    status: s });
+                syncData();
+                loadPage('paymentRequests');
+            });
+        }
+
+        function editPaymentRequest(id) {
+            const p = AppData.paymentRequests.find(x => x.id === id);
+            if (!p) return;
+            showModal('Edit Payment', `
+                        <input type="text" id="prc" value="${p.client}">
+                        <input type="number" id="pra" value="${p.amount}" step="0.01">
+                        <input type="text" id="prcu" value="${p.currency}">
+                        <input type="date" id="prd" value="${p.date}">
+                        <select id="prs"><option value="Pending" ${p.status==='Pending'?'selected':''}>Pending</option><option value="Approved" ${p.status==='Approved'?'selected':''}>Approved</option><option value="Rejected" ${p.status==='Rejected'?'selected':''}>Rejected</option></select>
+                    `, function() {
+                p.client = document.getElementById('prc').value.trim() || p.client;
+                p.amount = document.getElementById('pra').value || p.amount;
+                p.currency = document.getElementById('prcu').value.trim() || p.currency;
+                p.date = document.getElementById('prd').value || p.date;
+                p.status = document.getElementById('prs').value;
+                syncData();
+                loadPage('paymentRequests');
+            });
+        }
+
+        // ─── CRUD: Bank Accounts ──────────────────────────────────────
+
+        function addBankAccount() {
+            showModal('Bank Account', `
+                        <input type="text" id="bab" placeholder="Bank">
+                        <input type="text" id="baa" placeholder="Account #">
+                        <input type="text" id="bacu" placeholder="Currency" value="USD">
+                        <input type="text" id="bao" placeholder="Owner">
+                    `, function() {
+                const b = document.getElementById('bab').value.trim(),
+                    a = document.getElementById('baa').value.trim();
+                const cu = document.getElementById('bacu').value.trim() || 'USD',
+                    o = document.getElementById('bao').value.trim();
+                if (!b || !a) { alert('Bank and account required.'); return; }
+                AppData.bankAccounts.push({ id: getNextId(), bank: b, account: a, currency: cu, owner: o });
+                syncData();
+                loadPage('bankAccounts');
+            });
+        }
+
+        function editBankAccount(id) {
+            const b = AppData.bankAccounts.find(x => x.id === id);
+            if (!b) return;
+            showModal('Edit Bank', `
+                        <input type="text" id="bab" value="${b.bank}">
+                        <input type="text" id="baa" value="${b.account}">
+                        <input type="text" id="bacu" value="${b.currency}">
+                        <input type="text" id="bao" value="${b.owner}">
+                    `, function() {
+                b.bank = document.getElementById('bab').value.trim() || b.bank;
+                b.account = document.getElementById('baa').value.trim() || b.account;
+                b.currency = document.getElementById('bacu').value.trim() || b.currency;
+                b.owner = document.getElementById('bao').value.trim() || b.owner;
+                syncData();
+                loadPage('bankAccounts');
+            });
+        }
+
+        // ─── MANAGER CRUD (root only) ─────────────────────────────────
+
+        function addManager() {
+            if (currentUser.source !== 'root_manager') { alert('Only root manager can add managers.'); return; }
+            showModal('Add Manager', `
+                        <input type="text" id="mu" placeholder="Username">
+                        <input type="password" id="mp" placeholder="Password">
+                        <input type="email" id="me" placeholder="Email">
+                        <input type="text" id="mn" placeholder="Phone">
+                    `, function() {
+                const u = document.getElementById('mu').value.trim(),
+                    p = document.getElementById('mp').value,
+                    e = document.getElementById('me').value.trim(),
+                    n = document.getElementById('mn').value.trim();
+                if (!u || !p || !e) { alert('Username, password, email required.'); return; }
+                if (AppData.managers.some(x => x.username === u) || AppData.agents.some(x => x.username === u) ||
+                    AppData.clients.some(x => x.username === u) || u === ROOT_MANAGER_USER.username) {
+                    alert('Username taken.'); return;
+                }
+                AppData.managers.push({ id: getNextId(), username: u, password: p, email: e, number: n || '',
+                    status: 'Active' });
+                syncData();
+                loadPage('managers');
+                alert('Manager added.');
+            });
+        }
+
+        function editManager(id) {
+            if (currentUser.source !== 'root_manager') { alert('Only root manager can edit managers.'); return; }
+            const m = AppData.managers.find(x => x.id === id);
+            if (!m) return;
+            showModal('Edit Manager', `
+                        <input type="text" id="mu" value="${m.username}">
+                        <input type="password" id="mp" placeholder="New password (leave blank)">
+                        <input type="email" id="me" value="${m.email}">
+                        <input type="text" id="mn" value="${m.number||''}">
+                        <select id="ms"><option value="Active" ${m.status==='Active'?'selected':''}>Active</option><option value="Inactive" ${m.status==='Inactive'?'selected':''}>Inactive</option></select>
+                    `, function() {
+                const u = document.getElementById('mu').value.trim(),
+                    p = document.getElementById('mp').value,
+                    e = document.getElementById('me').value.trim(),
+                    n = document.getElementById('mn').value.trim(),
+                    s = document.getElementById('ms').value;
+                if (!u || !e) { alert('Username and email required.'); return; }
+                if (AppData.managers.some(x => x.username === u && x.id !== id) || AppData.agents.some(x => x
+                        .username === u) || AppData.clients.some(x => x.username === u) ||
+                    u === ROOT_MANAGER_USER.username) { alert('Username taken.'); return; }
+                m.username = u;
+                if (p) m.password = p;
+                m.email = e;
+                m.number = n || '';
+                m.status = s;
+                syncData();
+                loadPage('managers');
+                alert('Manager updated.');
+            });
+        }
+
+        function deleteManager(id) {
+            if (currentUser.source !== 'root_manager') { alert('Only root manager can delete managers.'); return; }
+            if (!confirm('Delete manager?')) return;
+            AppData.managers = AppData.managers.filter(x => x.id !== id);
+            syncData();
+            loadPage('managers');
+        }
+
+        // ─── STATEMENTS ───────────────────────────────────────────────
+
+        function generateStatement(currency) {
+            if (currency !== 'USD') { alert('Only USD supported.'); return; }
+            const key = 'usd';
+            if (!AppData.statements[key]) AppData.statements[key] = [];
+            AppData.statements[key].push({
+                id: getNextId(),
+                date: new Date().toISOString().split('T')[0],
+                description: 'Generated entry',
+                amount: `+${(Math.random()*50+10).toFixed(2)}`,
+                balance: `$${(Math.random()*500+100).toFixed(2)}`
+            });
+            syncData();
+            loadPage('usdStatements');
+            alert('Statement generated.');
+        }
+
+        function exportStatement(currency) {
+            if (currency !== 'USD') { alert('Only USD supported.'); return; }
+            const key = 'usd';
+            const stmts = AppData.statements[key] || [];
+            if (stmts.length === 0) { alert('No statements.'); return; }
+            const csv = 'Date,Description,Amount,Balance\n' + stmts.map(s =>
+                `${s.date},${s.description},${s.amount},${s.balance}`).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'USD_statement.csv';
+            link.click();
+            setTimeout(() => URL.revokeObjectURL(link.href), 5000);
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        //  MODAL
+        // ════════════════════════════════════════════════════════════════
+
+        let currentModalCallback = null;
+
+        function showModal(title, bodyHTML, confirmCallback) {
+            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-pen"></i> ${title}`;
+            document.getElementById('modalBody').innerHTML = bodyHTML;
+            document.getElementById('modalOverlay').classList.add('active');
+            currentModalCallback = confirmCallback;
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            currentModalCallback = null;
+        }
+        document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
+        document.getElementById('modalConfirmBtn').addEventListener('click', function() {
+            if (currentModalCallback) currentModalCallback();
+            closeModal();
+        });
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ════════════════════════════════════════════════════════════════
+        //  NAVIGATION EVENTS
+        // ════════════════════════════════════════════════════════════════
+
+        function attachNavEvents() {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const page = this.getAttribute('data-page');
+                    const hasSub = this.getAttribute('data-has-sub') === 'true';
+                    if (hasSub) {
+                        const subId = page === 'iprn' ? 'submenu-iprn' : page === 'statements' ?
+                            'submenu-statements' : null;
+                        if (subId) {
+                            const sub = document.getElementById(subId);
+                            if (sub) {
+                                sub.classList.toggle('show');
+                                const chevron = this.querySelector('.fa-chevron-down, .fa-chevron-up');
+                                if (chevron) {
+                                    chevron.className = sub.classList.contains('show') ?
+                                        'fas fa-chevron-up' : 'fas fa-chevron-down';
+                                }
+                                document.querySelectorAll('.submenu-container').forEach(s => {
+                                    if (s.id !== subId) {
+                                        s.classList.remove('show');
+                                        const pn = s.previousElementSibling;
+                                        if (pn && pn.classList.contains('nav-item')) {
+                                            const ch = pn.querySelector(
+                                            '.fa-chevron-down, .fa-chevron-up');
+                                            if (ch) ch.className = 'fas fa-chevron-down';
+                                        }
+                                    }
+                                });
+                                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove(
+                                'active'));
+                                this.classList.add('active');
+                            }
+                        }
+                    } else {
+                        document.querySelectorAll('.submenu-container').forEach(s => s.classList.remove('show'));
+                        document.querySelectorAll('.nav-item .fa-chevron-up').forEach(c => c.className =
+                            'fas fa-chevron-down');
+                        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                        this.classList.add('active');
+                        loadPage(page);
+                        if (window.innerWidth <= 900) {
+                            document.getElementById('sidebar').classList.remove('show');
+                        }
+                    }
+                });
+            });
+
+            document.querySelectorAll('.submenu-container a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const page = this.getAttribute('data-page');
+                    const parent = this.closest('.submenu-container');
+                    const parentNav = parent.previousElementSibling;
+                    if (parentNav && parentNav.classList.contains('nav-item')) {
+                        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                        parentNav.classList.add('active');
+                        parent.classList.add('show');
+                        const ch = parentNav.querySelector('.fa-chevron-down, .fa-chevron-up');
+                        if (ch) ch.className = 'fas fa-chevron-up';
+                    }
+                    loadPage(page);
+                    if (window.innerWidth <= 900) {
+                        document.getElementById('sidebar').classList.remove('show');
+                    }
+                });
+            });
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        //  MOBILE SIDEBAR
+        // ════════════════════════════════════════════════════════════════
+
+        function setupMobileSidebar() {
+            const toggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const close = document.getElementById('closeSidebar');
+
+            if (toggle) {
+                toggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('show');
+                    if (window.innerWidth <= 900) {
+                        sidebar.classList.remove('hidden');
+                        sidebar.style.display = 'block';
+                        if (close) close.style.display = 'block';
+                    }
+                });
+            }
+            if (close) {
+                close.addEventListener('click', function() {
+                    sidebar.classList.remove('show');
+                    if (window.innerWidth <= 900) { sidebar.style.display = 'none';
+                        close.style.display = 'none'; }
+                });
+            }
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 900) {
+                    const s = document.getElementById('sidebar');
+                    const t = document.getElementById('mobileMenuToggle');
+                    if (s && t && !s.contains(e.target) && !t.contains(e.target)) {
+                        s.classList.remove('show');
+                        if (window.innerWidth <= 900) { s.style.display = 'none'; if (close) close.style
+                                .display = 'none'; }
+                    }
+                }
+            });
+            window.addEventListener('resize', function() {
+                const s = document.getElementById('sidebar');
+                const c = document.getElementById('closeSidebar');
+                if (window.innerWidth > 900) {
+                    if (s) { s.classList.remove('show');
+                        s.style.display = 'block';
+                        s.classList.remove('hidden'); }
+                    if (c) c.style.display = 'none';
+                } else {
+                    if (s && !s.classList.contains('show')) s.style.display = 'none';
+                }
+            });
+            if (window.innerWidth <= 900) {
+                if (sidebar) { sidebar.style.display = 'none';
+                    sidebar.classList.remove('hidden'); }
+                if (close) close.style.display = 'none';
+            }
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        //  SHOW DASHBOARD
+        // ════════════════════════════════════════════════════════════════
+
+        function showDashboard() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboardApp').classList.add('active');
+
+            updateProfile();
+
+            document.getElementById('userRoleDisplay').innerHTML = `
+                        <span>👤 Role: <span id="roleLabel">${currentUser.role || 'User'}</span></span>
+                        <span class="logout-link" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</span>
+                    `;
+            document.getElementById('logoutBtn')?.addEventListener('click', function() {
+                clearSession();
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('dashboardApp').classList.remove('active');
+                const err = document.getElementById('loginError');
+                err.innerText = '❌ Logged out.';
+                err.style.display = 'block';
+                generateCaptcha();
+                localStorage.removeItem(SESSION_KEY);
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('captchaInput').value = '';
+                document.getElementById('sidebar').classList.remove('manager-theme');
+                if (window._reportInterval) { clearInterval(window._reportInterval);
+                    window._reportInterval = null; }
+            });
+
+            buildSidebar();
+            renderStats();
+            loadPage('dashboard');
+            setupMobileSidebar();
+
+            if (window.innerWidth <= 900) {
+                const s = document.getElementById('sidebar');
+                if (s) { s.style.display = 'none';
+                    s.classList.remove('hidden');
+                    s.classList.remove('show'); }
+            }
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        //  INIT
+        // ════════════════════════════════════════════════════════════════
+
+        generateCaptcha();
+        document.getElementById('loginPage').style.display = 'flex';
+        document.getElementById('dashboardApp').classList.remove('active');
+
+        const sessionUser = getSessionUser();
+        if (sessionUser) {
+            currentUser = sessionUser;
+            showDashboard();
+        }
+
+        // Expose globals
+        window.addRange = addRange;
+        window.editRange = editRange;
+        window.deleteRange = deleteRange;
+        window.addNumber = addNumber;
+        window.removeNumber = removeNumber;
+        window.removeAllNumbers = removeAllNumbers;
+        window.addClient = addClient;
+        window.editClient = editClient;
+        window.deleteClient = deleteClient;
+        window.addAgent = addAgent;
+        window.editAgent = editAgent;
+        window.deleteAgent = deleteAgent;
+        window.addManager = addManager;
+        window.editManager = editManager;
+        window.deleteManager = deleteManager;
+        window.addNews = addNews;
+        window.addCreditNote = addCreditNote;
+        window.addPaymentRequest = addPaymentRequest;
+        window.editPaymentRequest = editPaymentRequest;
+        window.addBankAccount = addBankAccount;
+        window.editBankAccount = editBankAccount;
+        window.generateStatement = generateStatement;
+        window.exportStatement = exportStatement;
+        window.loadPage = loadPage;
+        window.requestNumber = requestNumber;
+        window.approveRequest = approveRequest;
+        window.rejectRequest = rejectRequest;
+        window.uploadNumbersFile = uploadNumbersFile;
+        window.filterRequestTable = filterRequestTable;
+        window.updateReportMock = updateReportMock;
+        window.toggleSelectAll = toggleSelectAll;
+        window.updateSelectionCount = updateSelectionCount;
+        window.bulkDeleteSelected = bulkDeleteSelected;
+        window.sendChatMessage = sendChatMessage;
+        window.filterChat = filterChat;
+
+        // ─── Auto-start report ────────────────────────────────────────
+
+        (function() {
+            if (document.getElementById('dashboardApp').classList.contains('active')) {
+                const content = document.getElementById('pageContent');
+                if (content && content.querySelector('#report-body')) {
+                    updateReportMock();
+                    if (window._reportInterval) clearInterval(window._reportInterval);
+                    window._reportInterval = setInterval(updateReportMock, 5000);
+                }
+            }
+        })();
+    </script>
+
+</body>
+</html>

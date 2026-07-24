@@ -1,0 +1,12 @@
+{
+  "name": "lamex-sms-dashboard",
+  "version": "1.0.0",
+  "description": "Lamex SMS Manager Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
