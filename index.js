@@ -1,18 +1,135 @@
 const { default: makeWASocket, useMultiFileAuthState, delay, Browsers } = require('@whiskeysockets/baileys');
 const pino = require('pino');
-const readline = require('readline');
 const http = require('http');
+const { parse } = require('querystring');
 
-// Vercel سرور کے لیے ہیلتھ چیک سرور
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('WhatsApp MD Bot [SA!R] is running successfully!');
+// --- HTTP SERVER & DASHBOARD UI ---
+const server = http.createServer(async (req, res) => {
+  if (req.method === 'POST' && req.url === '/pair') {
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', async () => {
+      const params = parse(body);
+      const phoneNumber = params.phone ? params.phone.replace(/[^0-9]/g, '') : '';
+      const service = params.service || '1';
+
+      if (!phoneNumber) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Phone number is required!' }));
+        return;
+      }
+
+      try {
+        // Real WhatsApp Pairing Code Generation Logic
+        const pairCode = await getWhatsAppPairingCode(phoneNumber);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ code: pairCode }));
+      } catch (err) {
+        console.error('Pairing error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Failed to generate code. Try again.' }));
+      }
+    });
+    return;
+  }
+
+  // HTML Dashboard Interface
+  res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+  res.end(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SA!R MD - Dashboard</title>
+        <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0f19; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+            .dashboard-card { background: #1e293b; padding: 35px; border-radius: 16px; width: 100%; max-width: 420px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); text-align: center; }
+            .profile-circle { width: 80px; height: 80px; background: linear-gradient(135deg, #3b82f6, #9333ea); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px; font-weight: bold; font-size: 14px; color: white; box-shadow: 0 4px 10px rgba(59,130,246,0.4); text-align: center; padding: 5px; word-break: break-word; }
+            h2 { color: #38bdf8; margin-bottom: 5px; font-size: 22px; }
+            .subtitle { color: #94a3b8; font-size: 13px; margin-bottom: 25px; }
+            .form-group { margin-bottom: 20px; text-align: left; }
+            label { display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 8px; font-weight: 600; }
+            select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 14px; box-sizing: border-box; }
+            select:focus, input:focus { outline: none; border-color: #38bdf8; }
+            .btn-pair { background: #2563eb; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 5px; }
+            .btn-pair:hover { background: #1d4ed8; }
+            .code-box { margin-top: 20px; background: #0f172a; border: 2px dashed #38bdf8; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 22px; letter-spacing: 4px; color: #4ade80; display: none; }
+            .loading { color: #facc15; font-size: 14px; margin-top: 10px; display: none; }
+        </style>
+    </head>
+    <body>
+        <div class="dashboard-card">
+            <div class="profile-circle">SA!R MD</div>
+            <h2>Dashboard Panel</h2>
+            <div class="subtitle">WhatsApp MD Bot & Script Keyboard</div>
+            
+            <div class="form-group">
+                <label>Choose Service (Limit 20):</label>
+                <select id="serviceSelect">
+                    <option value="1">Service 1: WhatsApp Bot Basic</option>
+                    <option value="2">Service 2: AI Auto-Reply Bot</option>
+                    <option value="3">Service 3: Group Management Pro</option>
+                    <option value="4">Service 4: Script Keyboard Custom</option>
+                    <option value="5">Service 5: Full Advanced Automation</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>WhatsApp Number:</label>
+                <input type="text" id="whatsappNumber" placeholder="923XXXXXXXXX">
+            </div>
+
+            <button class="btn-pair" onclick="generatePairCode()">Pair WhatsApp</button>
+            <div class="loading" id="loadingText">Connecting to WhatsApp server... Please wait.</div>
+            <div class="code-box" id="pairCodeDisplay">_ _ _ _ _ _ _ _</div>
+        </div>
+
+        <script>
+            async function generatePairCode() {
+                const number = document.getElementById('whatsappNumber').value;
+                const service = document.getElementById('serviceSelect').value;
+                if(!number) {
+                    alert('Please enter your WhatsApp number first!');
+                    return;
+                }
+                
+                document.getElementById('loadingText').style.display = 'block';
+                document.getElementById('pairCodeDisplay').style.display = 'none';
+
+                try {
+                    const response = await fetch('/pair', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'phone=' + encodeURIComponent(number) + '&service=' + encodeURIComponent(service)
+                    });
+                    const data = await response.json();
+                    
+                    document.getElementById('loadingText').style.display = 'none';
+                    if(data.code) {
+                        const codeBox = document.getElementById('pairCodeDisplay');
+                        codeBox.innerText = data.code;
+                        codeBox.style.display = 'block';
+                    } else {
+                        alert(data.error || 'Failed to get code.');
+                    }
+                } catch(e) {
+                    document.getElementById('loadingText').style.display = 'none';
+                    alert('Server connection error!');
+                }
+            }
+        </script>
+    </body>
+    </html>
+  `);
 });
+
 server.listen(process.env.PORT || 3000);
 
-async function startBot() {
+// --- BACKEND WHATSAPP SOCKET & PAIRING HANDLER ---
+async function getWhatsAppPairingCode(phoneNumber) {
   const { state, saveCreds } = await useMultiFileAuthState('./auth_session');
-
+  
   const sock = makeWASocket({
     logger: pino({ level: 'silent' }),
     printQRInTerminal: false,
@@ -22,139 +139,14 @@ async function startBot() {
 
   sock.ev.on('creds.update', saveCreds);
 
-  // پیئر کوڈ کا مسئلہ حل کرنے کے لیے ٹائم ڈیلے فکس
+  // Wait for socket connection to stabilize
+  await delay(4000);
+
   if (!sock.authState.creds.registered) {
-    await delay(5000); 
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-    rl.question('Please enter your WhatsApp phone number (with country code, e.g., 923XXXXXXXXX): ', async (phoneNumber) => {
-      rl.close();
-      try {
-        const code = await sock.requestPairingCode(phoneNumber.trim());
-        console.log(`\n========================================`);
-        console.log(`YOUR PAIRING CODE IS: ${code}`);
-        console.log(`========================================\n`);
-      } catch (err) {
-        console.error('Failed to request pairing code:', err);
-      }
-    });
+    let code = await sock.requestPairingCode(phoneNumber);
+    // Format code neatly with hyphens if needed or return raw string
+    return code?.match(/.{1,4}/g)?.join('-') || code;
+  } else {
+    throw new Error('Device is already registered!');
   }
-
-  sock.ev.on('connection.update', (update) => {
-    const { connection, lastDisconnect } = update;
-    if (connection === 'close') {
-      const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== 400;
-      console.log('Connection closed. Reconnecting...', shouldReconnect);
-      if (shouldReconnect) {
-        startBot();
-      }
-    } else if (connection === 'open') {
-      console.log('✅ WhatsApp Bot successfully connected!');
-    }
-  });
-
-  // کمانڈ ہینڈلر اور 40+ کمانڈز
-  sock.ev.on('messages.upsert', async ({ messages }) => {
-    const m = messages[0];
-    if (!m.message || m.key.fromMe) return;
-
-    const messageType = Object.keys(m.message)[0];
-    let body = '';
-    
-    if (messageType === 'conversation') {
-      body = m.message.conversation;
-    } else if (messageType === 'extendedTextMessage') {
-      body = m.message.extendedTextMessage.text;
-    } else if (messageType === 'imageMessage' && m.message.imageMessage.caption) {
-      body = m.message.imageMessage.caption;
-    }
-
-    const prefix = '.';
-    if (!body.startsWith(prefix)) return;
-
-    const args = body.slice(prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
-    const q = args.join(' ');
-
-    console.log(`[COMMAND LOG] Executed: ${command}`);
-
-    // کمنٹ ورکنگ اسٹیٹس ویریفیکیشن
-    const isCommentWorking = true; 
-
-    switch (command) {
-      // --- مینو کمانڈ ---
-      case 'menu':
-      case 'help':
-        let menuText = `╔═════════════════════════╗\n`;
-        menuText += `║   🤖 **ZONE PANEL MD** 🤖   ║\n`;
-        menuText += `║   DEVELOP BY [SA!R]     ║\n`;
-        menuText += `╚═════════════════════════╝\n\n`;
-        menuText += `💬 **Comment Status:** ${isCommentWorking ? 'Active & Working ✅' : 'Inactive ❌'}\n\n`;
-        menuText += `📂 **[ 40+ COMMAND LIST ]**\n\n`;
-        menuText += `🔹 *General Commands:*\n`;
-        menuText += `1. .menu / .help\n2. .ping\n3. .owner\n4. .runtime\n5. .script\n6. .speed\n7. .info\n8. .alive\n9. .repo\n10. .donate\n\n`;
-        menuText += `🔹 *Group Commands:*\n`;
-        menuText += `11. .tagall\n12. .hidetag\n13. .kick\n14. .add\n15. .promote\n16. .demote\n17. .group open/close\n18. .antilink\n19. .revoke\n20. .setname\n21. .setdesc\n22. .linkgc\n23. .demoteall\n24. .polling\n\n`;
-        menuText += `🔹 *Tools & Utility:*\n`;
-        menuText += `25. .sticker / .s\n26. .toimg\n27. .tts\n28. .translate\n29. .weather\n30. .calc\n31. .qr\n32. .bass\n33. .nightcore\n34. .tinyurl\n35. .igdl\n\n`;
-        menuText += `🔹 *Owner & Fun:*\n`;
-        menuText += `36. .restart\n37. .broadcast\n38. .block\n39. .unblock\n40. .fact\n41. .joke\n42. .quote\n`;
-        await sock.sendMessage(m.key.remoteJid, { text: menuText }, { quoted: m });
-        break;
-
-      // --- جنرل کمانڈز ---
-      case 'ping':
-        await sock.sendMessage(m.key.remoteJid, { text: 'Pong! 🏓 Bot is active.' }, { quoted: m });
-        break;
-      case 'owner':
-        await sock.sendMessage(m.key.remoteJid, { text: '👑 Developed proudly by **[SA!R]**' }, { quoted: m });
-        break;
-      case 'runtime':
-        const uptime = process.uptime();
-        const hours = Math.floor(uptime / 3600);
-        const minutes = Math.floor((uptime % 3600) / 60);
-        const seconds = Math.floor(uptime % 60);
-        await sock.sendMessage(m.key.remoteJid, { text: `⏱️ Uptime: ${hours}h ${minutes}m ${seconds}s` }, { quoted: m });
-        break;
-      case 'script':
-      case 'sc':
-        await sock.sendMessage(m.key.remoteJid, { text: '📦 WhatsApp MD Script Keyboard (Price: Rs. 9000). Developed by **[SA!R]**.' }, { quoted: m });
-        break;
-      case 'alive':
-        await sock.sendMessage(m.key.remoteJid, { text: '✨ Bot is running smoothly on cloud!' }, { quoted: m });
-        break;
-      case 'speed':
-        await sock.sendMessage(m.key.remoteJid, { text: '⚡ Response Speed: Fast' }, { quoted: m });
-        break;
-
-      // --- گروپ کمانڈز ---
-      case 'tagall':
-        await sock.sendMessage(m.key.remoteJid, { text: `📢 Attention everyone in the group!` }, { quoted: m });
-        break;
-      case 'kick':
-        await sock.sendMessage(m.key.remoteJid, { text: '⚠️ Command executed: Member removal action initiated.' }, { quoted: m });
-        break;
-      case 'antilink':
-        await sock.sendMessage(m.key.remoteJid, { text: '🛡️ Anti-link filter is active.' }, { quoted: m });
-        break;
-
-      // --- ٹولز اور فن کمانڈز ---
-      case 'sticker':
-      case 's':
-        await sock.sendMessage(m.key.remoteJid, { text: '🎨 Send an image with caption .s to make a sticker.' }, { quoted: m });
-        break;
-      case 'fact':
-        await sock.sendMessage(m.key.remoteJid, { text: '🧠 Fact: JavaScript is widely used for full-stack web development.' }, { quoted: m });
-        break;
-      case 'joke':
-        await sock.sendMessage(m.key.remoteJid, { text: '😂 Why do programmers prefer dark mode? Because light attracts bugs!' }, { quoted: m });
-        break;
-
-      default:
-        await sock.sendMessage(m.key.remoteJid, { text: `❌ Unknown command! Type .menu to see 40+ commands.` }, { quoted: m });
-        break;
-    }
-  });
-}
-
-startBot();
-                      
+                  }
