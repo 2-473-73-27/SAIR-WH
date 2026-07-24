@@ -1,13 +1,16 @@
 {
-  "name": "red-zone-otp",
+  "name": "grand-panel-output",
   "version": "1.0.0",
-  "description": "Production Ready Real OTP Gateway",
+  "description": "Output dashboard and API proxy for Grand Panel",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "express": "^4.19.2",
+    "node-fetch": "^2.7.0"
+  },
+  "engines": {
+    "node": ">=18.x"
   }
 }
