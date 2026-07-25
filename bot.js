@@ -4,7 +4,6 @@ const axios = require('axios');
 (async () => {
     console.log('Starting Automation Bot...');
     
-    // Fixed for Railway Linux environment (No Sandbox error resolved)
     const browser = await puppeteer.launch({ 
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox'] 
@@ -12,22 +11,21 @@ const axios = require('axios');
     
     const page = await browser.newPage();
 
+    // Set custom User-Agent to bypass bot detection
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
     try {
-        // 1. Go to Old Website Login Page
         await page.goto('http://51.89.99.105/NumberPanel/login', { waitUntil: 'networkidle2' });
 
-        // 2. Fill Username and Password
         await page.type('input[name="username"], #username', 'SairahmadZ016');
         await page.type('input[name="password"], #password', '112233');
 
-        // 3. Auto Solve Math Captcha
         const captchaText = await page.$eval('#captcha-text, .captcha, label', el => el.innerText).catch(() => '5 + 3');
         const mathCleaned = captchaText.replace(/[^0-9+\-*/]/g, '');
         const captchaAnswer = eval(mathCleaned);
 
         await page.type('input[name="captcha"], #captcha', captchaAnswer.toString());
 
-        // 4. Click Login
         await Promise.all([
             page.click('button[type="submit"], #login-btn'),
             page.waitForNavigation({ waitUntil: 'networkidle2' })
@@ -35,15 +33,12 @@ const axios = require('axios');
 
         console.log('Logged into Dashboard successfully!');
 
-        // 5. Click Left Side Three Lines Menu
         await page.click('.sidebar-toggle, .menu-icon, #menu-toggle').catch(() => {});
         await new Promise(r => setTimeout(r, 1000));
 
-        // 6. Click 'Reply & State' option
         await page.click('text/Reply & State, a.reply-state').catch(() => {});
         await new Promise(r => setTimeout(r, 1000));
 
-        // 7. Click 'SMS Report'
         await Promise.all([
             page.click('text/SMS Report, a.sms-report'),
             page.waitForNavigation({ waitUntil: 'networkidle2' })
@@ -51,7 +46,6 @@ const axios = require('axios');
 
         console.log('Navigated to SMS Report Page.');
 
-        // 8. Extract Details from the SMS Report Table
         const extractedData = await page.evaluate(() => {
             const row = document.querySelector('table tbody tr');
             if (!row) return null;
@@ -84,4 +78,3 @@ const axios = require('axios');
         await browser.close();
     }
 })();
-            
