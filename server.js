@@ -8,16 +8,20 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Database Connection
+// Railway Database Environment Variables support
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'otp_forward_system'
+    host: process.env.MYSQLHOST || 'localhost',
+    user: process.env.MYSQLUSER || 'root',
+    password: process.env.MYSQLPASSWORD || '',
+    database: process.env.MYSQLDATABASE || 'otp_forward_system',
+    port: process.env.MYSQLPORT || 3306
 });
 
 db.connect(err => {
-    if (err) throw err;
+    if (err) {
+        console.error('Database connection failed:', err);
+        return;
+    }
     console.log('Database connected successfully.');
 });
 
@@ -54,7 +58,7 @@ app.get('/api/reports', (searchReq, searchRes) => {
     });
 });
 
-// Secure User Registration with Argon2 (256-bit hashing standard)
+// Secure User Registration with Argon2
 app.post('/api/register', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -68,7 +72,7 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
-    console.log('New website running on http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`New website running on port ${PORT}`);
 });
-  
