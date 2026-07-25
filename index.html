@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OTP Forward System Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: auto; background: #1e293b; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 15px; }
+        .status-live { color: #22c55e; font-weight: bold; display: flex; align-items: center; gap: 6px; }
+        .status-live::before { content: ''; width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block; animation: pulse 1.5px infinite; }
+        .search-box { margin: 20px 0; }
+        .search-box input { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; font-size: 14px; }
+        th { background: #0f172a; color: #38bdf8; }
+        tr:hover { background: #334155; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>OTP & SMS Forward System</h2>
+            <div class="status-live">[System is Live]</div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search Cli / Client / Number..." onkeyup="fetchReports()">
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Range</th>
+                    <th>Number</th>
+                    <th>CLI</th>
+                    <th>Client</th>
+                    <th>SMS (Only show this)</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="reportTableBody">
+                <!-- Dynamically loaded -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function fetchReports() {
+            const query = document.getElementById('searchInput').value;
+            const res = await fetch(`/api/reports?q=${query}`);
+            const data = await res.json();
+            
+            const tbody = document.getElementById('reportTableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(row => {
+                // Show half name for client privacy if needed, or full name based on preference
+                let displayName = row.client_name ? row.client_name.substring(0, Math.ceil(row.client_name.length / 2)) + '...' : '';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.report_date || ''}</td>
+                    <td>${row.date_range_val || ''}</td>
+                    <td>${row.phone_number || ''}</td>
+                    <td>${row.cli || ''}</td>
+                    <td>${displayName}</td>
+                    <td><strong>${row.sms_content || ''}</strong></td>
+                    <td>${row.status}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        fetchReports();
+        setInterval(fetchReports, 5000); // Auto-refresh live data every 5 seconds
+    </script>
+</body>
+</html>
