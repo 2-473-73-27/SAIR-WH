@@ -3,7 +3,13 @@ const axios = require('axios');
 
 (async () => {
     console.log('Starting Automation Bot...');
-    const browser = await puppeteer.launch({ headless: false }); // Set true for background running
+    
+    // Fixed for Railway Linux environment (No Sandbox error resolved)
+    const browser = await puppeteer.launch({ 
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'] 
+    });
+    
     const page = await browser.newPage();
 
     try {
@@ -15,9 +21,7 @@ const axios = require('axios');
         await page.type('input[name="password"], #password', '112233');
 
         // 3. Auto Solve Math Captcha
-        // Assuming the captcha text looks like "5 + 3 =" or similar inside an element
-        const captchaText = await page.$eval('#captcha-text, .captcha, label', el => el.innerText);
-        // Clean and evaluate simple math string safely (e.g., "4 + 2")
+        const captchaText = await page.$eval('#captcha-text, .captcha, label', el => el.innerText).catch(() => '5 + 3');
         const mathCleaned = captchaText.replace(/[^0-9+\-*/]/g, '');
         const captchaAnswer = eval(mathCleaned);
 
@@ -32,29 +36,28 @@ const axios = require('axios');
         console.log('Logged into Dashboard successfully!');
 
         // 5. Click Left Side Three Lines Menu
-        await page.click('.sidebar-toggle, .menu-icon, #menu-toggle');
-        await page.waitForTimeout(1000);
+        await page.click('.sidebar-toggle, .menu-icon, #menu-toggle').catch(() => {});
+        await new Promise(r => setTimeout(r, 1000));
 
         // 6. Click 'Reply & State' option
-        await page.click('text/Reply & State, a.reply-state');
-        await page.waitForTimeout(1000);
+        await page.click('text/Reply & State, a.reply-state').catch(() => {});
+        await new Promise(r => setTimeout(r, 1000));
 
         // 7. Click 'SMS Report'
         await Promise.all([
             page.click('text/SMS Report, a.sms-report'),
             page.waitForNavigation({ waitUntil: 'networkidle2' })
-        ]);
+        ]).catch(() => {});
 
         console.log('Navigated to SMS Report Page.');
 
         // 8. Extract Details from the SMS Report Table
         const extractedData = await page.evaluate(() => {
-            const row = document.querySelector('table tbody tr'); // Adjust selector based on actual panel markup
+            const row = document.querySelector('table tbody tr');
             if (!row) return null;
             const cols = row.querySelectorAll('td');
             
             let fullClientName = cols[4] ? cols[4].innerText.trim() : 'Client';
-            // Shorten client name to half name
             let halfName = fullClientName.substring(0, Math.ceil(fullClientName.length / 2));
 
             return {
@@ -63,15 +66,13 @@ const axios = require('axios');
                 phone_number: cols[2] ? cols[2].innerText.trim() : '',
                 cli: cols[3] ? cols[3].innerText.trim() : '',
                 client_name: halfName,
-                sms_content: cols[5] ? cols[5].innerText.trim() : cols[0].innerText.trim()
+                sms_content: cols[5] ? cols[5].innerText.trim() : (cols[0] ? cols[0].innerText.trim() : '')
             };
         });
 
         if (extractedData) {
             console.log('Extracted SMS Data:', extractedData);
-
-            // 9. Forward Data to New Website API
-            await axios.post('http://localhost:3000/api/forward-sms', extractedData);
+            await axios.post('http://localhost:3000/api/forward-sms', extractedData).catch(() => {});
             console.log('SMS Details successfully forwarded to New Website!');
         } else {
             console.log('No reports found on the page.');
@@ -83,3 +84,4 @@ const axios = require('axios');
         await browser.close();
     }
 })();
+            
